@@ -1,0 +1,5 @@
+build/
+cmake-build-debug/
+.idea/
+.vs/
+flatbuffers/monster_generated.h

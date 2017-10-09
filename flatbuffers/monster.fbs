@@ -1,0 +1,39 @@
+// Example IDL file for our monster's schema.
+namespace MyGame.Sample;
+
+enum Color:byte { Red = 0, Green, Blue = 2 }
+
+//do not use union
+//union Equipment { Weapon } // Optionally add more tables.
+
+struct Vec3 {
+  x:float;
+  y:float;
+  z:float;
+}
+
+table Monster {
+  pos:Vec3; // Struct.
+  mana:short = 150;
+  hp:short = 100;
+  name:string;
+//do not use deprecated field
+//  friendly:bool = false (deprecated);
+  inventory:[ubyte];  // Vector of scalars.
+  color:Color = Blue; // Enum.
+  weapons:[Weapon];   // Vector of tables.
+  equipped:Weapon;
+  path:[Vec3];        // Vector of structs.
+}
+
+table Weapon {
+  name:string;
+  damage:short;
+}
+
+table MonstersList {
+    data:[Monster];
+}
+
+root_type MonstersList;
+
