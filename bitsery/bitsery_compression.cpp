@@ -64,8 +64,8 @@ namespace bitsery {
     }
 }
 
-using Buffer = uint8_t[150000];
-using InputAdapter = bitsery::InputBufferAdapter<const uint8_t*>;
+using Buffer = std::vector<uint8_t>;
+using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
 using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
 using Writer = bitsery::AdapterWriter<OutputAdapter, bitsery::DefaultConfig>;
 using Reader = bitsery::AdapterReader<InputAdapter, bitsery::DefaultConfig>;
@@ -74,7 +74,7 @@ class BitseryArchiver : public ISerializerTest {
 public:
 
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
-
+        _buf.clear();
         bitsery::Serializer<OutputAdapter> ser(OutputAdapter{_buf});
         ser.container(data, 100000000);
         auto& bw = bitsery::AdapterAccess::getWriter(ser);
@@ -84,7 +84,7 @@ public:
     }
 
     void deserialize(Buf buf, std::vector<MyTypes::Monster> &res) override {
-        bitsery::BasicDeserializer<Reader> des(InputAdapter{buf.ptr, buf.bytesCount});
+        bitsery::BasicDeserializer<Reader> des(InputAdapter{_buf.begin(), buf.bytesCount});
         des.container(res, 100000000);
     }
 private:
@@ -93,7 +93,7 @@ private:
 
 int main () {
     BitseryArchiver test{};
-    runTest("bitsery compression\n\tbuffer: uint8_t[150000]\n\tall components of Vec3 is compressed in [-1.0, 1.0] range with precision 0.01",
+    runTest("bitsery compression\n\tbuffer: std::vector<uint8_t>\n\tall components of Vec3 is compressed in [-1.0, 1.0] range with precision 0.01",
             test, MONSTERS, SAMPLES);
     return 0;
 }

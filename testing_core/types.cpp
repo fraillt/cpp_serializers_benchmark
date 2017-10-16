@@ -28,6 +28,7 @@
 #include <valarray>
 #include <iostream>
 
+
 static std::uniform_int_distribution<int16_t> rand_char((int16_t) 'A', (int16_t) 'Z');
 static std::uniform_int_distribution<int> rand_len(1, 10);
 static std::uniform_int_distribution<int16_t> rand_nr(0);
