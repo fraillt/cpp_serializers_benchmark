@@ -1,11 +1,11 @@
 
-set(bitsery_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/external/cereal)
+set(bitsery_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/external/bitsery)
 set(bitsery_INCLUDE ${bitsery_PREFIX}/src/bitsery/include)
 ExternalProject_Add(
         bitsery
         PREFIX ${bitsery_PREFIX}
         URL "https://github.com/fraillt/bitsery/archive/v4.0.0.tar.gz"
-        URL_MD5 "A5B2102A6177661BCE5DDBCD9C982006"
+        URL_MD5 "a5b2102a6177661bce5ddbcd9c982006"
         CONFIGURE_COMMAND ""
         BUILD_COMMAND ""
         INSTALL_COMMAND ""

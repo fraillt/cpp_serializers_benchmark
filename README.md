@@ -9,6 +9,7 @@
 | test_bitsery_fixed_buffer     | 44176       | 7565      | 987      | 1080     |
 | test_bitsery_sstream          | 49792       | 7565      | 4384     | 4424     |
 | test_bitsery_verbose_syntax   | 65432       | 7565      | 1271     | 1343     |
+| test_boost                    | 252752      | 11885     | 10855    | 9120     |
 | test_cereal                   | 74848       | 11261     | 6708     | 6799     |
 | test_flatbuffers              | 67032       | 16100     | 8793     | 3028     |
 | test_hand_written             | 43496       | 7565      | 1095     | 1467     |
@@ -27,6 +28,7 @@
 | test_bitsery_fixed_buffer     | 46360       | 7398      | 1054     | 1544     |
 | test_bitsery_sstream          | 47192       | 7398      | 4347     | 4754     |
 | test_bitsery_verbose_syntax   | 49704       | 7398      | 1534     | 1514     |
+| test_boost                    | 230696      | 11718     | 12493    | 10133    |
 | test_cereal                   | 54032       | 11094     | 7513     | 6420     |
 | test_flatbuffers              | 60304       | 15952     | 12414    | 3016     |
 | test_hand_written             | 39576       | 7398      | 1057     | 971      |

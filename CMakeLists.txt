@@ -35,7 +35,8 @@ set(SOURCE_FILES
 #################################################
 
 add_subdirectory(bitsery)
+add_subdirectory(boost)
 add_subdirectory(cereal)
-add_subdirectory(hand_written)
 add_subdirectory(flatbuffers)
+add_subdirectory(hand_written)
 add_subdirectory(yas)
