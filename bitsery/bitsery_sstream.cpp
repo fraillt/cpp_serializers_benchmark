@@ -59,8 +59,9 @@ namespace bitsery {
 }
 
 using Buffer = std::fstream;
-using InputAdapter = bitsery::IOStreamAdapter;
-using OutputAdapter = bitsery::IOStreamAdapter;
+using InputAdapter = bitsery::InputStreamAdapter;
+//lets use buffered stream adatper
+using OutputAdapter = bitsery::OutputBufferedStreamAdapter;
 using Writer = bitsery::AdapterWriter<OutputAdapter, bitsery::DefaultConfig>;
 using Reader = bitsery::AdapterReader<InputAdapter, bitsery::DefaultConfig>;
 
@@ -69,9 +70,9 @@ public:
 
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
         std::stringstream ss;
-        bitsery::BasicSerializer<Writer> ser(InputAdapter{ss});
+        bitsery::BasicSerializer<Writer> ser(OutputAdapter{ss});
         ser.container(data, 100000000);
-
+        bitsery::AdapterAccess::getWriter(ser).flush();
         //copy only once to permanent buffer
         if (_buf.empty())
             _buf = ss.str();
@@ -84,7 +85,7 @@ public:
 
     void deserialize(Buf buf, std::vector<MyTypes::Monster> &res) override {
         std::stringstream ss(_buf);
-        bitsery::BasicDeserializer<Reader> des(OutputAdapter{ss});
+        bitsery::BasicDeserializer<Reader> des(InputAdapter{ss});
         des.container(res, 100000000);
     }
 private:

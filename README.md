@@ -1,5 +1,12 @@
 # CPP serializers benchmark
 
+### tested libraries
+* bitsery 4.1.0
+* boost 1.65.1
+* cereal 1.2.2
+* flatbuffers 1.7.1
+* yas 5.0.0
+
 ## GCC 7.1.0 (Ubuntu 16.04 x64)
 | APP                           | binary size | data size | ser time | des time |
 |-------------------------------|-------------|-----------|----------|----------|
@@ -7,7 +14,7 @@
 | test_bitsery_compatibility    | 69288       | 7669      | 1374     | 1327     |
 | test_bitsery_compression      | 64880       | 4784      | 1641     | 2462     |
 | test_bitsery_fixed_buffer     | 44176       | 7565      | 987      | 1080     |
-| test_bitsery_sstream          | 49792       | 7565      | 4384     | 4424     |
+| test_bitsery_sstream          | 50120       | 7565      | 1467     | 4779     |
 | test_bitsery_verbose_syntax   | 65432       | 7565      | 1271     | 1343     |
 | test_boost                    | 252752      | 11885     | 10855    | 9120     |
 | test_cereal                   | 74848       | 11261     | 6708     | 6799     |
@@ -26,7 +33,7 @@
 | test_bitsery_compatibility    | 57768       | 7502      | 2137     | 1803     |
 | test_bitsery_compression      | 52040       | 4617      | 3060     | 3937     |
 | test_bitsery_fixed_buffer     | 46360       | 7398      | 1054     | 1544     |
-| test_bitsery_sstream          | 47192       | 7398      | 4347     | 4754     |
+| test_bitsery_sstream          | 52568       | 7398      | 1862     | 5077     |
 | test_bitsery_verbose_syntax   | 49704       | 7398      | 1534     | 1514     |
 | test_boost                    | 230696      | 11718     | 12493    | 10133    |
 | test_cereal                   | 54032       | 11094     | 7513     | 6420     |
