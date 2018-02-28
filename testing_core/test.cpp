@@ -73,13 +73,6 @@ void runTest(const std::string& name, ISerializerTest& archive, int monstersCoun
         container_overhead += sizeof( std::string);
      }
 
-    /* std::cout << std::endl; */
-    /* std::cout << "uint8_t: \t" << sizeof( uint8_t ) << "B" << std::endl; */
-    /* std::cout << "Vec3: \t\t" << sizeof( MyTypes::Vec3 ) << "B" << std::endl; */
-    /* std::cout << "Weapon: \t" << sizeof( MyTypes::Weapon ) << "B" << std::endl; */
-    /* std::cout << "vector<>: \t" << sizeof( std::vector<uint8_t>) << "B" << std::endl; */
-    /* std::cout << "std::string: \t" << sizeof( std::string) << "B" << std::endl; */
-
     std::cout << std::endl;
 
     double compression = buf.bytesCount/static_cast<double>(datasize_bytes - container_overhead)*100;
@@ -97,16 +90,6 @@ void runTest(const std::string& name, ISerializerTest& archive, int monstersCoun
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     std::cout << "serialize time: \t\t" << duration.count() / 1000 << "ms" << std::endl;
 
-    //begin deserialization
-//    std::cout << "*deserialize* on empty object" << std::endl;
-//    start = std::chrono::steady_clock::now();
-//    for (auto i = 0; i < repeatCount; ++i) {
-//        std::vector<MyTypes::Monster> tmp{};
-//        archive.deserialize(buf, tmp);
-//    }
-//    end = std::chrono::steady_clock::now();
-//    duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-//    std::cout << "\ttime: " << duration.count() / 1000 << "ms" << std::endl;
 
     //deserialize on top of old object
     start = std::chrono::steady_clock::now();
