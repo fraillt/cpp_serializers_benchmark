@@ -29,10 +29,12 @@ void runTest(const std::string& name, ISerializerTest& archive, int monstersCoun
     //test
     std::cout << std::endl << "*** TEST : " << name << std::endl;
 
-    std::cout << "warmpup...: monsters=" << monstersCount << ", samples=" << repeatCount;
     const std::vector<MyTypes::Monster>& data = MyTypes::createMonsters(monstersCount);
     std::vector<MyTypes::Monster> res{};
+
     //warmup
+    std::cout << "monsters=" << monstersCount << ", samples=" << repeatCount << std::endl;
+    std::cout << "warmup..." << std::endl;
     auto buf = archive.serialize(data);
     for (auto i = 0; i < 5; ++i) {
         buf = archive.serialize(data);
@@ -42,16 +44,58 @@ void runTest(const std::string& name, ISerializerTest& archive, int monstersCoun
         std::cout << "result != data, abort." << std::endl;
         return;
     }
-    std::cout << ", serialized data size: " << buf.bytesCount << "B" << std::endl;
+
+    // calculate the actual memory used for storing data
+    // remove all container and ease of access overhead
+    size_t datasize_bytes = 0;
+    size_t container_overhead = 0;
+    for( auto& monster : data )
+     {
+        datasize_bytes += sizeof(MyTypes::Monster);
+        datasize_bytes += monster.name.size();
+        for ( auto& weapon : monster.weapons )
+        {
+          datasize_bytes += sizeof( MyTypes::Weapon );
+          datasize_bytes += weapon.name.size();
+          // remove container overhead
+          container_overhead += sizeof( std::string );
+        }
+        for ( auto& point : monster.path )
+        {
+          datasize_bytes += sizeof(MyTypes::Vec3);
+        }
+        for ( auto& item : monster.inventory )
+        {
+          datasize_bytes += sizeof(uint8_t);
+        }
+        // all vector containers are same not depending on stored type
+        container_overhead += sizeof( std::vector<uint8_t> ) * 3;
+        container_overhead += sizeof( std::string);
+     }
+
+    /* std::cout << std::endl; */
+    /* std::cout << "uint8_t: \t" << sizeof( uint8_t ) << "B" << std::endl; */
+    /* std::cout << "Vec3: \t\t" << sizeof( MyTypes::Vec3 ) << "B" << std::endl; */
+    /* std::cout << "Weapon: \t" << sizeof( MyTypes::Weapon ) << "B" << std::endl; */
+    /* std::cout << "vector<>: \t" << sizeof( std::vector<uint8_t>) << "B" << std::endl; */
+    /* std::cout << "std::string: \t" << sizeof( std::string) << "B" << std::endl; */
+
+    std::cout << std::endl;
+
+    double compression = buf.bytesCount/static_cast<double>(datasize_bytes - container_overhead)*100;
+
+    /* std::cout << "actual used data size: \t\t" << datasize_bytes - container_overhead << "B" << std::endl; */
+    std::cout << "serialized data size: \t\t" << buf.bytesCount << "B" << std::endl;
+    std::cout << "compression ratio: \t\t" << compression << "%" << std::endl;
+    std::cout << std::endl;
 
     //begin serialization
-    std::cout << "*serialize*" << std::endl;
     auto start = std::chrono::steady_clock::now();
     for (auto i = 0; i < repeatCount; ++i)
         archive.serialize(data);
     auto end = std::chrono::steady_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "\ttime: " << duration.count() / 1000 << "ms" << std::endl;
+    std::cout << "serialize time: \t\t" << duration.count() / 1000 << "ms" << std::endl;
 
     //begin deserialization
 //    std::cout << "*deserialize* on empty object" << std::endl;
@@ -65,13 +109,13 @@ void runTest(const std::string& name, ISerializerTest& archive, int monstersCoun
 //    std::cout << "\ttime: " << duration.count() / 1000 << "ms" << std::endl;
 
     //deserialize on top of old object
-    std::cout << "*deserialize on same object*" << std::endl;
     start = std::chrono::steady_clock::now();
     for (auto i = 0; i < repeatCount; ++i) {
         archive.deserialize(buf, res);
     }
     end = std::chrono::steady_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "\ttime: " << duration.count() / 1000 << "ms" << std::endl;
+    std::cout << "deserialize time: \t\t" << duration.count() / 1000 << "ms" << std::endl;
+
 
 }
