@@ -2,4 +2,7 @@ build/
 cmake-build-debug/
 .idea/
 .vs/
+tools/Testing/
+tools/results/
+tools/node_modules/
 flatbuffers/monster_generated.h

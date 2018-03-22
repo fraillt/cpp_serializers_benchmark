@@ -1,10 +1,10 @@
 set(flatbuffers_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/external/flatbuffers)
 set(flatbuffers_INCLUDE ${flatbuffers_PREFIX}/include)
 ExternalProject_Add(
-        flatbuffers
+        flatbuffers_dep
         PREFIX ${flatbuffers_PREFIX}
-        URL "https://github.com/google/flatbuffers/archive/v1.7.1.tar.gz"
-        URL_MD5 "81934736f31fbd2cfdb513e71b53b358"
+        URL "https://github.com/google/flatbuffers/archive/v1.8.0.tar.gz"
+        URL_MD5 "276cab8303c4189cbe3b8a70e0515d65"
         CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${flatbuffers_PREFIX} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         LOG_UPDATE ON
         LOG_CONFIGURE ON
@@ -24,6 +24,8 @@ add_custom_command(
 set_source_files_properties(${flatbuffers_GENERATED_FILE} PROPERTIES GENERATED TRUE)
 
 
-add_executable(test_flatbuffers flatbuffers.cpp ${SOURCE_FILES} ${flatbuffers_GENERATED_FILE})
-add_dependencies(test_flatbuffers flatbuffers)
-target_include_directories(test_flatbuffers PUBLIC ${flatbuffers_INCLUDE})
+add_executable(flatbuffers flatbuffers.cpp ${SOURCE_FILES} ${flatbuffers_GENERATED_FILE})
+add_dependencies(flatbuffers flatbuffers_dep)
+target_include_directories(flatbuffers PUBLIC ${flatbuffers_INCLUDE})
+target_link_libraries(flatbuffers PRIVATE Testing::core)
+add_test(NAME test_flatbuffers COMMAND flatbuffers)

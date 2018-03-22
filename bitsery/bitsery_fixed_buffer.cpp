@@ -20,72 +20,79 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
-#include "testing_core/test.h"
+#include <testing/test.h>
 #include <bitsery/bitsery.h>
 #include <bitsery/adapter/buffer.h>
-//#include <bitsery/traits/vector.h>
-//#include <bitsery/traits/array.h>
-#include <bitsery/flexible.h>
-#include <bitsery/flexible/vector.h>
-#include <bitsery/flexible/string.h>
+#include <bitsery/traits/vector.h>
+#include <bitsery/traits/string.h>
 
 namespace bitsery {
 
     template<typename S>
-    void serialize(S& s, MyTypes::Vec3 &o) {
-        s.archive(o.x, o.y, o.z);
+    void serialize(S &s, MyTypes::Vec3 &o) {
+        s.value4b(o.x);
+        s.value4b(o.y);
+        s.value4b(o.z);
     }
 
     template<typename S>
-    void serialize(S& s, MyTypes::Weapon &o) {
-        s.archive(maxSize(o.name, 10),//this maxSize function is optional
-                  o.damage);
+    void serialize(S &s, MyTypes::Weapon &o) {
+        s.text1b(o.name, 10);
+        s.value2b(o.damage);
     }
 
     template<typename S>
-    void serialize(S& s, MyTypes::Monster &o) {
-        s.archive(maxSize(o.name, 10),
-                  o.equipped,
-                  maxSize(o.weapons, 10),
-                  o.pos,
-                  maxSize(o.path, 10),
-                  o.mana,
-                  maxSize(o.inventory, 10),
-                  o.hp,
-                  o.color);
+    void serialize(S &s, MyTypes::Monster &o) {
+        s.value1b(o.color);
+        s.value2b(o.mana);
+        s.value2b(o.hp);
+        s.object(o.equipped);
+        s.object(o.pos);
+        s.container(o.path, 10);
+        s.container(o.weapons, 10);
+        s.container1b(o.inventory, 10);
+        s.text1b(o.name, 10);
     }
 
 }
 
 using Buffer = uint8_t[150000];
-using InputAdapter = bitsery::InputBufferAdapter<const uint8_t*>;
+using InputAdapter = bitsery::InputBufferAdapter<const uint8_t *>;
 using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
 using Writer = bitsery::AdapterWriter<OutputAdapter, bitsery::DefaultConfig>;
 using Reader = bitsery::AdapterReader<InputAdapter, bitsery::DefaultConfig>;
 
-class BitseryArchiver : public ISerializerTest {
+class BitseryFixedBufferArchiver : public ISerializerTest {
 public:
 
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
 
-        bitsery::Serializer<OutputAdapter> ser(OutputAdapter{_buf});
+        bitsery::Serializer<OutputAdapter> ser(OutputAdapter { _buf });
         ser.container(data, 100000000);
-        auto& bw = bitsery::AdapterAccess::getWriter(ser);
+        auto &bw = bitsery::AdapterAccess::getWriter(ser);
         bw.flush();
         return Buf{std::addressof(*std::begin(_buf)), bw.writtenBytesCount()};
 
     }
 
     void deserialize(Buf buf, std::vector<MyTypes::Monster> &res) override {
-        bitsery::BasicDeserializer<Reader> des(InputAdapter{buf.ptr, buf.bytesCount});
+        bitsery::BasicDeserializer<Reader> des(InputAdapter { buf.ptr, buf.bytesCount });
         des.container(res, 100000000);
     }
+
+    TestInfo testInfo() const override {
+        return {
+                SerializationLibrary::BITSERY,
+                "fixed buffer",
+                "use non-resizable buffer uint8_t[150000] for serialization"
+        };
+    }
+
 private:
     Buffer _buf{};
 };
 
-int main () {
-    BitseryArchiver test{};
-    runTest("bitsery fixed buffer\n\tbuffer: uint8_t[150000]", test, MONSTERS, SAMPLES);
-    return 0;
+int main() {
+    BitseryFixedBufferArchiver test{};
+    return runTest(test);
 }

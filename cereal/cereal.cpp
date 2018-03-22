@@ -20,7 +20,7 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
-#include "testing_core/test.h"
+#include <testing/test.h>
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/vector.hpp>
 #include <cereal/types/string.hpp>
@@ -42,38 +42,44 @@ namespace cereal {
         archive(o.name, o.equipped, o.weapons, o.pos, o.path, o.mana, o.inventory, o.hp, o.color);
     }
 
-
-    class CerealArchiver : public ISerializerTest {
-    public:
-        Buf serialize(const std::vector<MyTypes::Monster> &data) override {
-            std::stringstream _stream;
-            cereal::BinaryOutputArchive archive(_stream);
-
-            archive(data);
-
-            if (_buf.empty())
-                _buf = _stream.str();
-            return {
-                    reinterpret_cast<uint8_t *>(std::addressof(*_buf.begin())),
-                    _buf.size()
-            };
-        }
-
-        void deserialize(Buf buf, std::vector<MyTypes::Monster> &resVec) override {
-            std::stringstream stream(_buf);
-            cereal::BinaryInputArchive archive(stream);
-
-            archive(resVec);
-        };
-
-    private:
-        std::string _buf;
-    };
-
 }
 
-int main () {
-    cereal::CerealArchiver test;
-    runTest("cereal\n\tbuffer: std::stringstream", test, MONSTERS, SAMPLES);
-    return 0;
+class CerealArchiver : public ISerializerTest {
+public:
+    Buf serialize(const std::vector<MyTypes::Monster> &data) override {
+        std::stringstream _stream;
+        cereal::BinaryOutputArchive archive(_stream);
+
+        archive(data);
+
+        if (_buf.empty())
+            _buf = _stream.str();
+        return {
+                reinterpret_cast<uint8_t *>(std::addressof(*_buf.begin())),
+                _buf.size()
+        };
+    }
+
+    void deserialize(Buf buf, std::vector<MyTypes::Monster> &resVec) override {
+        std::stringstream stream(_buf);
+        cereal::BinaryInputArchive archive(stream);
+
+        archive(resVec);
+    }
+
+    TestInfo testInfo() const override {
+        return {
+                SerializationLibrary::CEREAL,
+                "general",
+                ""
+        };
+    }
+
+private:
+    std::string _buf;
+};
+
+int main() {
+    CerealArchiver test;
+    return runTest(test);
 }

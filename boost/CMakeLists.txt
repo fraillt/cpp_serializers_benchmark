@@ -1,24 +1,34 @@
 
 set(boost_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/external/boost)
-set(boost_INCLUDE ${boost_PREFIX}/src/boost)
+set(boost_INCLUDE ${boost_PREFIX}/src/boost_dep)
+
+if( UNIX )
+    set( boost_CMDbootstrap bootstrap.sh )
+    set( boost_CMDb2 b2 )
+else()
+    message(FATAL_ERROR "boost building implemented only on unix")
+endif()
+
+set(boost_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/external/boost)
+set(boost_INCLUDE ${boost_PREFIX}/src/boost_dep)
 ExternalProject_Add(
-        boost
+        boost_dep
         PREFIX ${boost_PREFIX}
-        URL "http://netcologne.dl.sourceforge.net/project/boost/boost/1.65.1/boost_1_65_1.tar.gz"
-        URL_MD5 "ee64fd29a3fe42232c6ac3c419e523cf"
-        CONFIGURE_COMMAND ${boost_PREFIX}/src/boost/bootstrap.sh --with-libraries=serialization --prefix=${boost_PREFIX}
-        BUILD_COMMAND ./bjam link=static cxxflags='-fPIC'
-        INSTALL_COMMAND ./bjam link=static install
+        URL "https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.gz"
+        URL_MD5 "d275cd85b00022313c171f602db59fc5"
+        CONFIGURE_COMMAND ${boost_PREFIX}/src/boost_dep/${boost_CMDbootstrap} --with-libraries=serialization --prefix=${boost_PREFIX}
+        BUILD_COMMAND ./${boost_CMDb2} --with-serialization
+        INSTALL_COMMAND ""
         BUILD_IN_SOURCE 1
         LOG_UPDATE ON
         LOG_CONFIGURE ON
         LOG_BUILD ON
         LOG_INSTALL ON
 )
-set(boost_LIBRARIES ${boost_PREFIX}/lib/libboost_serialization.a)
 
-add_executable(test_boost boost.cpp ${SOURCE_FILES} )
-add_dependencies(test_boost boost)
-target_include_directories(test_boost PUBLIC ${boost_INCLUDE})
-target_link_libraries(test_boost ${boost_LIBRARIES})
+add_executable(boost boost.cpp)
+add_dependencies(boost boost_dep)
+target_include_directories(boost PUBLIC ${boost_INCLUDE})
+target_link_libraries(boost PRIVATE Testing::core ${boost_INCLUDE}/stage/lib/libboost_serialization.a)
 
+add_test(NAME test_boost COMMAND boost)

@@ -20,7 +20,7 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
-#include "testing_core/test.h"
+#include <testing/test.h>
 
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
@@ -71,14 +71,21 @@ public:
         boost::archive::binary_iarchive archive(stream);
 
         archive >> resVec;
-    };
+    }
+
+    TestInfo testInfo() const override {
+        return {
+                SerializationLibrary::BOOST,
+                "general",
+                ""
+        };
+    }
 
 private:
     std::string _buf;
 };
 
-int main () {
+int main() {
     BoostArchiver test;
-    runTest("boost\n\tbuffer: std::stringstream", test, MONSTERS, SAMPLES);
-    return 0;
+    return runTest(test);
 }

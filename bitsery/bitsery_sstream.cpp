@@ -20,62 +20,62 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
-#include "testing_core/test.h"
+#include <testing/test.h>
 #include <bitsery/bitsery.h>
 #include <bitsery/adapter/stream.h>
-//#include <bitsery/traits/vector.h>
-//#include <bitsery/traits/array.h>
-#include <bitsery/flexible.h>
-#include <bitsery/flexible/vector.h>
-#include <bitsery/flexible/string.h>
+#include <bitsery/traits/vector.h>
+#include <bitsery/traits/string.h>
 #include <sstream>
 
 namespace bitsery {
 
     template<typename S>
-    void serialize(S& s, MyTypes::Vec3 &o) {
-        s.archive(o.x, o.y, o.z);
+    void serialize(S &s, MyTypes::Vec3 &o) {
+        s.value4b(o.x);
+        s.value4b(o.y);
+        s.value4b(o.z);
     }
 
     template<typename S>
-    void serialize(S& s, MyTypes::Weapon &o) {
-        s.archive(maxSize(o.name, 10),//this maxSize function is optional
-                  o.damage);
+    void serialize(S &s, MyTypes::Weapon &o) {
+        s.text1b(o.name, 10);
+        s.value2b(o.damage);
     }
 
     template<typename S>
-    void serialize(S& s, MyTypes::Monster &o) {
-        s.archive(maxSize(o.name, 10),
-                  o.equipped,
-                  maxSize(o.weapons, 10),
-                  o.pos,
-                  maxSize(o.path, 10),
-                  o.mana,
-                  maxSize(o.inventory, 10),
-                  o.hp,
-                  o.color);
+    void serialize(S &s, MyTypes::Monster &o) {
+        s.value1b(o.color);
+        s.value2b(o.mana);
+        s.value2b(o.hp);
+        s.object(o.equipped);
+        s.object(o.pos);
+        s.container(o.path, 10);
+        s.container(o.weapons, 10);
+        s.container1b(o.inventory, 10);
+        s.text1b(o.name, 10);
     }
 
 }
 
-using Buffer = std::fstream;
+using Buffer = std::stringstream;
 using InputAdapter = bitsery::InputStreamAdapter;
 //lets use buffered stream adatper
 using OutputAdapter = bitsery::OutputBufferedStreamAdapter;
 using Writer = bitsery::AdapterWriter<OutputAdapter, bitsery::DefaultConfig>;
 using Reader = bitsery::AdapterReader<InputAdapter, bitsery::DefaultConfig>;
 
-class BitseryArchiver : public ISerializerTest {
+class BitseryStreamArchiver : public ISerializerTest {
 public:
 
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
-        std::stringstream ss;
-        bitsery::BasicSerializer<Writer> ser(OutputAdapter{ss});
+        Buffer ss;
+        bitsery::BasicSerializer<Writer> ser(OutputAdapter { ss });
         ser.container(data, 100000000);
         bitsery::AdapterAccess::getWriter(ser).flush();
         //copy only once to permanent buffer
-        if (_buf.empty())
+        if (_buf.empty()) {
             _buf = ss.str();
+        }
 
         return {
                 reinterpret_cast<uint8_t *>(std::addressof(*_buf.begin())),
@@ -85,15 +85,23 @@ public:
 
     void deserialize(Buf buf, std::vector<MyTypes::Monster> &res) override {
         std::stringstream ss(_buf);
-        bitsery::BasicDeserializer<Reader> des(InputAdapter{ss});
+        bitsery::BasicDeserializer<Reader> des(InputAdapter { ss });
         des.container(res, 100000000);
     }
+
+    TestInfo testInfo() const override {
+        return {
+                SerializationLibrary::BITSERY,
+                "stream",
+                "use stream input/output adapter, underlying type is std::stringstream"
+        };
+    }
+
 private:
     std::string _buf;
 };
 
-int main () {
-    BitseryArchiver test{};
-    runTest("bitsery sstream\n\tbuffer: std::stringstream", test, MONSTERS, SAMPLES);
-    return 0;
+int main() {
+    BitseryStreamArchiver test{};
+    return runTest(test);
 }

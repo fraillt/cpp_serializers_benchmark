@@ -21,14 +21,12 @@ set(CMAKE_CXX_STANDARD 14)
 # we only care about -O2
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
 
-# set common sources,
-include_directories(${CMAKE_SOURCE_DIR}/)
-set(SOURCE_FILES
-        ${CMAKE_SOURCE_DIR}/testing_core/types.cpp
-        ${CMAKE_SOURCE_DIR}/testing_core/types.h
-        ${CMAKE_SOURCE_DIR}/testing_core/test.cpp
-        ${CMAKE_SOURCE_DIR}/testing_core/test.h
-        )
+#################################################
+# add testing target and enable testing
+# for convienience, e.g. ctest --verbose | grep "*"
+#################################################
+enable_testing()
+add_subdirectory(testing_core)
 
 #################################################
 # configure executables

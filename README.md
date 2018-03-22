@@ -1,54 +1,64 @@
 # CPP serializers benchmark
 
 ### tested libraries
-* bitsery 4.1.0
-* boost 1.65.1
+* bitsery 4.2.1
+* boost 1.66.0
 * cereal 1.2.2
-* flatbuffers 1.7.1
-* yas 5.0.0
+* flatbuffers 1.8.0
+* yas 6.0.3
 
-## GCC 7.1.0 (Ubuntu 16.04 x64)
-| APP                           | binary size | data size | ser time | des time |
-|-------------------------------|-------------|-----------|----------|----------|
-| test_bitsery                  | 64704       | 7565      | 1229     | 1086     |
-| test_bitsery_compatibility    | 69288       | 7669      | 1374     | 1327     |
-| test_bitsery_compression      | 64880       | 4784      | 1641     | 2462     |
-| test_bitsery_fixed_buffer     | 44176       | 7565      | 987      | 1080     |
-| test_bitsery_sstream          | 50120       | 7565      | 1467     | 4779     |
-| test_bitsery_verbose_syntax   | 65432       | 7565      | 1271     | 1343     |
-| test_boost                    | 252752      | 11885     | 10855    | 9120     |
-| test_cereal                   | 74848       | 11261     | 6708     | 6799     |
-| test_flatbuffers              | 67032       | 16100     | 8793     | 3028     |
-| test_hand_written             | 43496       | 7565      | 1095     | 1467     |
-| test_hand_written_no_checking | 39408       | 11261     | 1074     | 896      |
-| test_yas                      | 63864       | 11311     | 1616     | 1712     |
-| test_yas_compression          | 72688       | 8523      | 2387     | 2890     |
-| test_yas_sstream              | 51048       | 11311     | 8627     | 7885     |
+## GCC 7.2.0 (Ubuntu 17.10 x64)
 
-## Clang 4.0.0 (Ubuntu 16.04 x64)
+| library     | test case                                                    | bin size | data size | ser time | des time |
+| ----------- | ------------------------------------------------------------ | -------- | --------- | -------- | -------- |
+| bitsery     | general                                                      | 64656B   | 6913B     | 1168ms   | 1207ms   |
+| bitsery     | compatibility[<sup>1</sup>](#additional-tests-information)   | 73240B   | 7016B     | 1201ms   | 1464ms   |
+| bitsery     | compression[<sup>2</sup>](#additional-tests-information)     | 64576B   | 4213B     | 1380ms   | 1322ms   |
+| bitsery     | fixed buffer[<sup>3</sup>](#additional-tests-information)    | 44184B   | 6913B     | 1104ms   | 1179ms   |
+| bitsery     | stream[<sup>4</sup>](#additional-tests-information)          | 54080B   | 6913B     | 1614ms   | 4935ms   |
+| bitsery     | flexible syntax[<sup>5</sup>](#additional-tests-information) | 64072B   | 6913B     | 1110ms   | 965ms    |
+| boost       | general                                                      | 265560B  | 11037B    | 10405ms  | 8382ms   |
+| cereal      | general                                                      | 73632B   | 10413B    | 6477ms   | 5409ms   |
+| flatbuffers | general                                                      | 66104B   | 14924B    | 7507ms   | 2759ms   |
+| handwritten | general[<sup>6</sup>](#additional-tests-information)         | 42736B   | 10413B    | 1013ms   | 886ms    |
+| handwritten | unsafe[<sup>7</sup>](#additional-tests-information)          | 38648B   | 10413B    | 1031ms   | 840ms    |
+| yas         | general[<sup>8</sup>](#additional-tests-information)         | 62976B   | 10463B    | 1591ms   | 1398ms   |
+| yas         | compression[<sup>9</sup>](#additional-tests-information)     | 71664B   | 7315B     | 2194ms   | 1561ms   |
+| yas         | stream[<sup>10</sup>](#additional-tests-information)         | 50112B   | 10463B    | 8583ms   | 7816ms   |
 
-| APP                           | binary size | data size | ser time | des time |
-|-------------------------------|-------------|-----------|----------|----------|
-| test_bitsery                  | 51328       | 7398      | 1848     | 1601     |
-| test_bitsery_compatibility    | 57768       | 7502      | 2137     | 1803     |
-| test_bitsery_compression      | 52040       | 4617      | 3060     | 3937     |
-| test_bitsery_fixed_buffer     | 46360       | 7398      | 1054     | 1544     |
-| test_bitsery_sstream          | 52568       | 7398      | 1862     | 5077     |
-| test_bitsery_verbose_syntax   | 49704       | 7398      | 1534     | 1514     |
-| test_boost                    | 230696      | 11718     | 12493    | 10133    |
-| test_cereal                   | 54032       | 11094     | 7513     | 6420     |
-| test_flatbuffers              | 60304       | 15952     | 12414    | 3016     |
-| test_hand_written             | 39576       | 7398      | 1057     | 971      |
-| test_hand_written_no_checking | 39512       | 11094     | 1091     | 850      |
-| test_yas                      | 56568       | 11144     | 3232     | 2182     |
-| test_yas_compression          | 56368       | 8358      | 3629     | 3680     |
-| test_yas_sstream              | 47000       | 11144     | 8466     | 8155     |
 
-`monsters = 50, running samples = 300000`
+## Clang 5.0.0 (Ubuntu 17.10 x64)
 
-*data is generated using std implementation of `<random>`*
+| library     | test case                                                    | bin size | data size | ser time | des time |
+| ----------- | ------------------------------------------------------------ | -------- | --------- | -------- | -------- |
+| bitsery     | general                                                      | 48968B   | 6913B     | 1393ms   | 1326ms   |
+| bitsery     | compatibility[<sup>1</sup>](#additional-tests-information)   | 55864B   | 7016B     | 1559ms   | 1626ms   |
+| bitsery     | compression[<sup>2</sup>](#additional-tests-information)     | 50072B   | 4213B     | 2781ms   | 3679ms   |
+| bitsery     | fixed buffer[<sup>3</sup>](#additional-tests-information)    | 40632B   | 6913B     | 1056ms   | 1316ms   |
+| bitsery     | stream[<sup>4</sup>](#additional-tests-information)          | 46568B   | 6913B     | 1793ms   | 4711ms   |
+| bitsery     | flexible syntax[<sup>5</sup>](#additional-tests-information) | 51096B   | 6913B     | 1760ms   | 1440ms   |
+| boost       | general                                                      | 222808B  | 11037B    | 11603ms  | 9529ms   |
+| cereal      | general                                                      | 53328B   | 10413B    | 7786ms   | 6144ms   |
+| flatbuffers | general                                                      | 59616B   | 14924B    | 9105ms   | 2622ms   |
+| handwritten | general[<sup>6</sup>](#additional-tests-information)         | 39096B   | 10413B    | 1001ms   | 794ms    |
+| handwritten | unsafe[<sup>7</sup>](#additional-tests-information)          | 39096B   | 10413B    | 996ms    | 758ms    |
+| yas         | general[<sup>8</sup>](#additional-tests-information)         | 56016B   | 10463B    | 3047ms   | 1801ms   |
+| yas         | compression[<sup>9</sup>](#additional-tests-information)     | 55928B   | 7315B     | 3583ms   | 2342ms   |
+| yas         | stream[<sup>10</sup>](#additional-tests-information)         | 46440B   | 10463B    | 8488ms   | 7874ms   |
 
-*implementations of uniform_xxx_distribution is different on different systems*
+
+### Additional tests information
+
+1. forward\/backward compatibility enabled for `Monster`
+2. all components of Vec3 is compressed in \[-1.0, 1.0\] range with precision 0.01
+3. use non-resizable buffer uint8\_t\[150000\] for serialization
+4. use stream input\/output adapter, underlying type is std::stringstream
+5. deserialization using `flexible` syntax, similar to `cereal`
+6. check buffer size on reading, but writing buffer is preallocated std::array&lt;uint8\_t, 1000000&gt;
+7. doesn't check for buffer size when reading, buffer: std::array&lt;uint8\_t, 1000000&gt;
+8. use yas::mem\_&lt;io&gt;stream as buffer
+9. with yas::no\_header and yas::compacted
+10. using std::stringstream
 
 ## Why another cpp serializers benchmark
 

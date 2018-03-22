@@ -1,36 +1,23 @@
 
 set(bitsery_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/external/bitsery)
-set(bitsery_INCLUDE ${bitsery_PREFIX}/src/bitsery/include)
+set(bitsery_INCLUDE ${bitsery_PREFIX}/src/bitsery_dep/include)
 ExternalProject_Add(
-        bitsery
+        bitsery_dep
         PREFIX ${bitsery_PREFIX}
-        URL "https://github.com/fraillt/bitsery/archive/v4.1.0.tar.gz"
-        URL_MD5 "e78b503085ce66d7e4040a9b5baeea34"
+        URL "https://github.com/fraillt/bitsery/archive/v4.2.1.tar.gz"
+        URL_MD5 "04ea26747e21927ceb27f5b0d00bce6b"
         CONFIGURE_COMMAND ""
         BUILD_COMMAND ""
         INSTALL_COMMAND ""
 )
 
-add_executable(test_bitsery bitsery.cpp ${SOURCE_FILES} )
-add_dependencies(test_bitsery bitsery)
-target_include_directories(test_bitsery PUBLIC ${bitsery_INCLUDE})
+file(GLOB ExampleFiles ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+foreach(ExampleFile ${ExampleFiles})
+    get_filename_component(ExampleName ${ExampleFile} NAME_WE)
 
-add_executable(test_bitsery_fixed_buffer bitsery_fixed_buffer.cpp ${SOURCE_FILES})
-add_dependencies(test_bitsery_fixed_buffer bitsery)
-target_include_directories(test_bitsery_fixed_buffer PUBLIC ${bitsery_INCLUDE})
-
-add_executable(test_bitsery_sstream bitsery_sstream.cpp ${SOURCE_FILES})
-add_dependencies(test_bitsery_sstream bitsery)
-target_include_directories(test_bitsery_sstream PUBLIC ${bitsery_INCLUDE})
-
-add_executable(test_bitsery_compatibility bitsery_compatibility.cpp ${SOURCE_FILES})
-add_dependencies(test_bitsery_compatibility bitsery)
-target_include_directories(test_bitsery_compatibility PUBLIC ${bitsery_INCLUDE})
-
-add_executable(test_bitsery_compression bitsery_compression.cpp ${SOURCE_FILES})
-add_dependencies(test_bitsery_compression bitsery)
-target_include_directories(test_bitsery_compression PUBLIC ${bitsery_INCLUDE})
-
-add_executable(test_bitsery_verbose_syntax bitsery_verbose_syntax.cpp ${SOURCE_FILES})
-add_dependencies(test_bitsery_verbose_syntax bitsery)
-target_include_directories(test_bitsery_verbose_syntax PUBLIC ${bitsery_INCLUDE})
+    add_executable(${ExampleName} ${ExampleFile})
+    add_dependencies(${ExampleName} bitsery_dep)
+    target_include_directories(${ExampleName} PUBLIC ${bitsery_INCLUDE})
+    target_link_libraries(${ExampleName} PRIVATE Testing::core)
+    add_test(NAME test_${ExampleName} COMMAND ${ExampleName})
+endforeach()

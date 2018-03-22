@@ -20,11 +20,7 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
-#include <vector>
-#include <string>
-
-#include "testing_core/test.h"
-#include <algorithm>
+#include <testing/test.h>
 #include <yas/mem_streams.hpp>
 #include <yas/binary_iarchive.hpp>
 #include <yas/binary_oarchive.hpp>
@@ -49,36 +45,43 @@ namespace yas {
         ar & o.name & o.equipped & o.weapons & o.pos & o.path & o.mana & o.inventory & o.hp & o.color;
     }
 
-
-    class YasArchiver : public ISerializerTest {
-    public:
-
-        Buf serialize(const std::vector<MyTypes::Monster> &data) override {
-            yas::mem_ostream os;
-            yas::binary_oarchive<yas::mem_ostream, yas::binary | yas::no_header> oa(os);
-            oa & data;
-            if (_buf.size == 0)
-                _buf = os.get_shared_buffer();
-
-            return {reinterpret_cast<const uint8_t *>(_buf.data.get()), _buf.size};
-        }
-
-        void deserialize(Buf buf, std::vector<MyTypes::Monster> &resVec) override {
-
-            yas::mem_istream is(buf.ptr, buf.bytesCount);
-            yas::binary_iarchive<yas::mem_istream, yas::binary | yas::no_header> ia(is);
-
-            ia & resVec;
-        };
-
-    private:
-        yas::shared_buffer _buf;
-    };
-
 }
 
-int main () {
-    yas::YasArchiver test;
-    runTest("yas\n\tbuffer: yas::mem_<io>stream", test, MONSTERS, SAMPLES);
-    return 0;
+class YasArchiver : public ISerializerTest {
+public:
+
+    Buf serialize(const std::vector<MyTypes::Monster> &data) override {
+        yas::mem_ostream os;
+        yas::binary_oarchive<yas::mem_ostream, yas::binary | yas::no_header> oa(os);
+        oa & data;
+        if (_buf.size == 0)
+            _buf = os.get_shared_buffer();
+
+        return {reinterpret_cast<const uint8_t *>(_buf.data.get()), _buf.size};
+    }
+
+    void deserialize(Buf buf, std::vector<MyTypes::Monster> &resVec) override {
+
+        yas::mem_istream is(buf.ptr, buf.bytesCount);
+        yas::binary_iarchive<yas::mem_istream, yas::binary | yas::no_header> ia(is);
+
+        ia & resVec;
+    }
+
+    TestInfo testInfo() const override {
+        return {
+                SerializationLibrary::YAS,
+                "general",
+                "use yas::mem_<io>stream as buffer"
+        };
+    }
+
+private:
+    yas::shared_buffer _buf;
+};
+
+
+int main() {
+    YasArchiver test;
+    return runTest(test);
 }

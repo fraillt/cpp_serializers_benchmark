@@ -21,57 +21,68 @@
 //SOFTWARE.
 
 
-#include "test.h"
+#include <testing/test.h>
 #include <iostream>
 #include <chrono>
 
-void runTest(const std::string& name, ISerializerTest& archive, int monstersCount, int repeatCount) {
-    //test
-    std::cout << std::endl << "*** TEST : " << name << std::endl;
+static constexpr int MONSTERS_COUNT = MONSTERS;
+static constexpr int SAMPLES_COUNT = SAMPLES;
 
-    std::cout << "warmpup...: monsters=" << monstersCount << ", samples=" << repeatCount;
-    const std::vector<MyTypes::Monster>& data = MyTypes::createMonsters(monstersCount);
+
+int runTest(ISerializerTest& testCase) {
+    //test
+    auto info = testCase.testInfo();
+    std::cout << std::endl << "* TEST: " << getLibraryName(info.library) << std::endl;
+    std::cout << "* name       : " << info.name << std::endl;
+    std::cout << "* info       : " << info.info << std::endl;
+
+    const std::vector<MyTypes::Monster>& data = MyTypes::createMonsters(MONSTERS_COUNT);
     std::vector<MyTypes::Monster> res{};
     //warmup
-    auto buf = archive.serialize(data);
+    auto buf = testCase.serialize(data);
     for (auto i = 0; i < 5; ++i) {
-        buf = archive.serialize(data);
-        archive.deserialize(buf, res);
+        buf = testCase.serialize(data);
+        testCase.deserialize(buf, res);
     }
     if (res != data) {
         std::cout << "result != data, abort." << std::endl;
-        return;
+        return -1;
     }
-    std::cout << ", serialized data size: " << buf.bytesCount << "B" << std::endl;
+    std::cout << "* data size  : " << buf.bytesCount << std::endl;
 
     //begin serialization
-    std::cout << "*serialize*" << std::endl;
     auto start = std::chrono::steady_clock::now();
-    for (auto i = 0; i < repeatCount; ++i)
-        archive.serialize(data);
+    for (auto i = 0; i < SAMPLES_COUNT; ++i)
+        testCase.serialize(data);
     auto end = std::chrono::steady_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "\ttime: " << duration.count() / 1000 << "ms" << std::endl;
-
-    //begin deserialization
-//    std::cout << "*deserialize* on empty object" << std::endl;
-//    start = std::chrono::steady_clock::now();
-//    for (auto i = 0; i < repeatCount; ++i) {
-//        std::vector<MyTypes::Monster> tmp{};
-//        archive.deserialize(buf, tmp);
-//    }
-//    end = std::chrono::steady_clock::now();
-//    duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-//    std::cout << "\ttime: " << duration.count() / 1000 << "ms" << std::endl;
+    std::cout << "* serialize  : " << duration.count() / 1000 << std::endl;
 
     //deserialize on top of old object
-    std::cout << "*deserialize on same object*" << std::endl;
     start = std::chrono::steady_clock::now();
-    for (auto i = 0; i < repeatCount; ++i) {
-        archive.deserialize(buf, res);
+    for (auto i = 0; i < SAMPLES_COUNT; ++i) {
+        testCase.deserialize(buf, res);
     }
     end = std::chrono::steady_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "\ttime: " << duration.count() / 1000 << "ms" << std::endl;
+    std::cout << "* deserialize: " << duration.count() / 1000 << std::endl;
+    return 0;
+}
 
+std::string getLibraryName(SerializationLibrary name) {
+    switch (name) {
+        case SerializationLibrary::BITSERY:
+            return "bitsery";
+        case SerializationLibrary::BOOST:
+            return "boost";
+        case SerializationLibrary::CEREAL:
+            return "cereal";
+        case SerializationLibrary::HAND_WRITTEN:
+            return "handwritten";
+        case SerializationLibrary::FLATBUFFERS:
+            return "flatbuffers";
+        case SerializationLibrary::YAS:
+            return "yas";
+    }
+    throw "Unknown library name";
 }

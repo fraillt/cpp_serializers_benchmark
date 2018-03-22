@@ -20,11 +20,12 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
+#include <testing/test.h>
 #include <algorithm>
 #include "monster_generated.h"
-#include "testing_core/test.h"
 
 using namespace MyGame::Sample;
+
 class FlatbuffersArchiver : public ISerializerTest {
 public:
 
@@ -35,10 +36,12 @@ public:
 
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
         _builder.Clear();
-        std::vector<flatbuffers::Offset<Monster>> monstersVec{};
+        std::vector<flatbuffers::Offset < Monster>>
+        monstersVec{};
         for (auto &m:data) {
             // Create a FlatBuffer's `vector` from the `std::vector`.
-            std::vector<flatbuffers::Offset<Weapon>> weaponsVec{};
+            std::vector<flatbuffers::Offset < Weapon>>
+            weaponsVec{};
             for (auto &w:m.weapons)
                 weaponsVec.push_back(createWeapon(_builder, w));
             auto weapons = _builder.CreateVector(weaponsVec);
@@ -80,35 +83,42 @@ public:
             res.resize(data->size());
             for (auto i = 0u; i < data->size(); ++i) {
                 auto m = data->Get(i);
-                auto& resM = res[i];
-                resM.equipped = MyTypes::Weapon{ m->equipped()->name()->data(), m->equipped()->damage() };
+                auto &resM = res[i];
+                resM.equipped = MyTypes::Weapon{m->equipped()->name()->data(), m->equipped()->damage()};
                 resM.name.resize(m->name()->size());
                 //cannot memcpy, because data is not contigous on flatbuffers
                 std::copy(m->name()->begin(), m->name()->end(), resM.name.begin());
                 resM.color = static_cast<MyTypes::Color>(m->color());
                 resM.hp = m->hp();
                 resM.mana = m->mana();
-                resM.pos = MyTypes::Vec3{m->pos()->x(), m->pos()->y(),m->pos()->z()};
+                resM.pos = MyTypes::Vec3{m->pos()->x(), m->pos()->y(), m->pos()->z()};
                 resM.inventory.resize(m->inventory()->size());
                 std::copy(m->inventory()->begin(), m->inventory()->end(), resM.inventory.begin());
                 resM.weapons.resize(m->weapons()->size());
-                std::transform(m->weapons()->begin(), m->weapons()->end(), resM.weapons.begin(), [](const auto& w) {
-                    return MyTypes::Weapon{ w->name()->data(), w->damage()};
+                std::transform(m->weapons()->begin(), m->weapons()->end(), resM.weapons.begin(), [](const auto &w) {
+                    return MyTypes::Weapon{w->name()->data(), w->damage()};
                 });
                 resM.path.resize(m->path()->size());
-                std::transform(m->path()->begin(), m->path()->end(), resM.path.begin(), [](const auto& p) {
+                std::transform(m->path()->begin(), m->path()->end(), resM.path.begin(), [](const auto &p) {
                     return MyTypes::Vec3{p->x(), p->y(), p->z()};
                 });
             }
         }
     };
 
+    TestInfo testInfo() const override {
+        return {
+                SerializationLibrary::FLATBUFFERS,
+                "general",
+                ""
+        };
+    }
+
 private:
     flatbuffers::FlatBufferBuilder _builder;
 };
 
-int main () {
+int main() {
     FlatbuffersArchiver test;
-    runTest("flatbuffers", test, MONSTERS, SAMPLES);
-    return 0;
+    return runTest(test);
 }

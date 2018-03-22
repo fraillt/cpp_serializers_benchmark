@@ -20,7 +20,7 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
-#include "testing_core/test.h"
+#include <testing/test.h>
 #include <array>
 #include <cstring>
 
@@ -31,20 +31,20 @@ public:
         auto begin = std::addressof(*_buf.begin());
         _pos = begin;
         writeSize(data.size());
-        for (auto& m:data) {
+        for (auto &m:data) {
             write(m.hp);
             write(m.mana);
             writeSize(m.name.size());
             write(m.name.data(), m.name.size());
-            write(static_cast<const typename std::underlying_type<MyTypes::Color>::type&>(m.color));
+            write(static_cast<const typename std::underlying_type<MyTypes::Color>::type &>(m.color));
             writeSize(m.inventory.size());
             write(m.inventory.data(), m.inventory.size());
             writeSize(m.weapons.size());
-            for (auto& w:m.weapons) {
+            for (auto &w:m.weapons) {
                 writeWeapon(w);
             }
             writeSize(m.path.size());
-            for (auto& p:m.path) {
+            for (auto &p:m.path) {
                 writeVec(p);
             }
             writeWeapon(m.equipped);
@@ -61,24 +61,28 @@ public:
         if (size > 1000000)
             return;
         res.resize(size);
-        for (auto& m:res) {
+        for (auto &m:res) {
             read(m.hp);
             read(m.mana);
-            readSize(size); if (size > 100) return;
+            readSize(size);
+            if (size > 100) return;
             m.name.resize(size);
-            read(const_cast<char*>(m.name.data()), size);
-            read(reinterpret_cast<typename std::underlying_type<MyTypes::Color>::type&>(m.color));
-            readSize(size);if (size > 100) return;
+            read(const_cast<char *>(m.name.data()), size);
+            read(reinterpret_cast<typename std::underlying_type<MyTypes::Color>::type &>(m.color));
+            readSize(size);
+            if (size > 100) return;
             m.inventory.resize(size);
             read(m.inventory.data(), size);
-            readSize(size);if (size > 100) return;
+            readSize(size);
+            if (size > 100) return;
             m.weapons.resize(size);
-            for (auto& w:m.weapons) {
+            for (auto &w:m.weapons) {
                 readWeapon(w);
             }
-            readSize(size);if (size > 100) return;
+            readSize(size);
+            if (size > 100) return;
             m.path.resize(size);
-            for (auto& p:m.path) {
+            for (auto &p:m.path) {
                 readVec(p);
             }
             readWeapon(m.equipped);
@@ -86,60 +90,70 @@ public:
         }
 
     }
+
+    TestInfo testInfo() const override {
+        return {
+                SerializationLibrary::HAND_WRITTEN,
+                "unsafe",
+                "doesn't check for buffer size when reading, buffer: std::array<uint8_t, 1000000>"
+        };
+    }
+
 private:
 
-    void writeWeapon(const MyTypes::Weapon& w) {
+    void writeWeapon(const MyTypes::Weapon &w) {
         write(w.damage);
         writeSize(w.name.size());
         write(w.name.data(), w.name.size());
     }
 
-    void writeVec(const MyTypes::Vec3& p) {
+    void writeVec(const MyTypes::Vec3 &p) {
         write(p.x);
         write(p.y);
         write(p.z);
     }
 
-    void readWeapon(MyTypes::Weapon& w) {
+    void readWeapon(MyTypes::Weapon &w) {
         read(w.damage);
         size_t size;
-        readSize(size);if (size > 100) return;
+        readSize(size);
+        if (size > 100) return;
         w.name.resize(size);
-        read(const_cast<char*>(w.name.data()), size);
+        read(const_cast<char *>(w.name.data()), size);
     }
 
-    void readVec(MyTypes::Vec3& p) {
+    void readVec(MyTypes::Vec3 &p) {
         read(p.x);
         read(p.y);
         read(p.z);
     }
 
-    template <typename T>
-    void write(const T& v) {
+    template<typename T>
+    void write(const T &v) {
         write(&v, 1);
     }
 
-    template <typename T>
-    void write(const T* v, size_t count) {
+    template<typename T>
+    void write(const T *v, size_t count) {
         const auto size = count * sizeof(T);
         std::memcpy(_pos, v, size);
         _pos += size;
     }
 
-    template <typename T>
-    void read(T& v) {
+    template<typename T>
+    void read(T &v) {
         read(&v, 1);
     }
 
-    template <typename T>
-    void read(T* v, size_t count) {
+    template<typename T>
+    void read(T *v, size_t count) {
         const auto size = count * sizeof(T);
         //do not check for overflow
         std::memcpy(v, _pos, size);
         _pos += size;
     }
 
-    void readSize(size_t& size) {
+    void readSize(size_t &size) {
         read(size);
     }
 
@@ -147,14 +161,13 @@ private:
         write(size);
     }
 
-    uint8_t* _pos{};
-    uint8_t* _end{};
+    uint8_t *_pos{};
+    uint8_t *_end{};
     std::array<uint8_t, 1000000> _buf{};
 };
 
 
-int main () {
+int main() {
     HandWrittenTest test{};
-    runTest("hand written\n\tbuffer: std::array<uint8_t, 1000000>\n\tno checking", test, MONSTERS, SAMPLES);
-    return 0;
+    return runTest(test);
 }

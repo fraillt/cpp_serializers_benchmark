@@ -20,48 +20,45 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
-#include "testing_core/test.h"
+#include <testing/test.h>
 #include <bitsery/bitsery.h>
 #include <bitsery/adapter/buffer.h>
-//#include <bitsery/traits/vector.h>
-//#include <bitsery/traits/array.h>
-#include <bitsery/flexible.h>
-#include <bitsery/flexible/vector.h>
-#include <bitsery/flexible/string.h>
-
+#include <bitsery/traits/vector.h>
+#include <bitsery/traits/string.h>
+//enable compression
 #include <bitsery/ext/value_range.h>
 
 namespace bitsery {
 
     template<typename S>
-    void serialize(S& s, MyTypes::Vec3 &o) {
-        s.enableBitPacking([&o](typename S::BPEnabledType& sbp) {
-            constexpr ext::ValueRange<float> range{-1.0f,1.0f, 0.01f};
+    void serialize(S &s, MyTypes::Vec3 &o) {
+        s.enableBitPacking([&o](typename S::BPEnabledType &sbp) {
+            constexpr ext::ValueRange<float> range{-1.0f, 1.0f, 0.01f};
             sbp.ext(o.x, range);
             sbp.ext(o.y, range);
             sbp.ext(o.z, range);
         });
-        //s.archive(o.x, o.y, o.z);
     }
 
     template<typename S>
-    void serialize(S& s, MyTypes::Weapon &o) {
-        s.archive(maxSize(o.name, 10),//this maxSize function is optional
-                  o.damage);
+    void serialize(S &s, MyTypes::Weapon &o) {
+        s.text1b(o.name, 10);
+        s.value2b(o.damage);
     }
 
     template<typename S>
-    void serialize(S& s, MyTypes::Monster &o) {
-        s.archive(maxSize(o.name, 10),
-                  o.equipped,
-                  maxSize(o.weapons, 10),
-                  o.pos,
-                  maxSize(o.path, 10),
-                  o.mana,
-                  maxSize(o.inventory, 10),
-                  o.hp,
-                  o.color);
+    void serialize(S &s, MyTypes::Monster &o) {
+        s.value1b(o.color);
+        s.value2b(o.mana);
+        s.value2b(o.hp);
+        s.object(o.equipped);
+        s.object(o.pos);
+        s.container(o.path, 10);
+        s.container(o.weapons, 10);
+        s.container1b(o.inventory, 10);
+        s.text1b(o.name, 10);
     }
+
 }
 
 using Buffer = std::vector<uint8_t>;
@@ -70,30 +67,37 @@ using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
 using Writer = bitsery::AdapterWriter<OutputAdapter, bitsery::DefaultConfig>;
 using Reader = bitsery::AdapterReader<InputAdapter, bitsery::DefaultConfig>;
 
-class BitseryArchiver : public ISerializerTest {
+class BitseryCompressionArchiver : public ISerializerTest {
 public:
 
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
         _buf.clear();
-        bitsery::Serializer<OutputAdapter> ser(OutputAdapter{_buf});
+        bitsery::Serializer<OutputAdapter> ser(OutputAdapter { _buf });
         ser.container(data, 100000000);
-        auto& bw = bitsery::AdapterAccess::getWriter(ser);
+        auto &bw = bitsery::AdapterAccess::getWriter(ser);
         bw.flush();
         return Buf{std::addressof(*std::begin(_buf)), bw.writtenBytesCount()};
 
     }
 
     void deserialize(Buf buf, std::vector<MyTypes::Monster> &res) override {
-        bitsery::BasicDeserializer<Reader> des(InputAdapter{_buf.begin(), buf.bytesCount});
+        bitsery::BasicDeserializer<Reader> des(InputAdapter { _buf.begin(), buf.bytesCount });
         des.container(res, 100000000);
     }
+
+    TestInfo testInfo() const override {
+        return {
+                SerializationLibrary::BITSERY,
+                "compression",
+                "all components of Vec3 is compressed in [-1.0, 1.0] range with precision 0.01"
+        };
+    }
+
 private:
     Buffer _buf{};
 };
 
-int main () {
-    BitseryArchiver test{};
-    runTest("bitsery compression\n\tbuffer: std::vector<uint8_t>\n\tall components of Vec3 is compressed in [-1.0, 1.0] range with precision 0.01",
-            test, MONSTERS, SAMPLES);
-    return 0;
+int main() {
+    BitseryCompressionArchiver test{};
+    return runTest(test);
 }

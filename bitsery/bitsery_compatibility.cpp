@@ -20,49 +20,48 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
-#include "testing_core/test.h"
+#include <testing/test.h>
 #include <bitsery/bitsery.h>
 #include <bitsery/adapter/buffer.h>
-//#include <bitsery/traits/vector.h>
-//#include <bitsery/traits/string.h>
-#include <bitsery/flexible.h>
-#include <bitsery/flexible/vector.h>
-#include <bitsery/flexible/string.h>
+#include <bitsery/traits/vector.h>
+#include <bitsery/traits/string.h>
 //enable forward/backward compatibility
 #include <bitsery/ext/growable.h>
 
 namespace bitsery {
 
-
     template<typename S>
-    void serialize(S& s, MyTypes::Vec3 &o) {
-        s.archive(o.x, o.y, o.z);
+    void serialize(S &s, MyTypes::Vec3 &o) {
+        s.value4b(o.x);
+        s.value4b(o.y);
+        s.value4b(o.z);
     }
 
     template<typename S>
-    void serialize(S& s, MyTypes::Weapon &o) {
-        s.archive(maxSize(o.name, 10),
-                  o.damage);
+    void serialize(S &s, MyTypes::Weapon &o) {
+        s.text1b(o.name, 10);
+        s.value2b(o.damage);
     }
 
     template<typename S>
-    void serialize(S& s, MyTypes::Monster &o) {
-        s.ext(o, ext::Growable{}, [&s](MyTypes::Monster& o1) {
-            s.archive(maxSize(o1.name, 10),
-                      o1.equipped,
-                      maxSize(o1.weapons, 10),
-                      o1.pos,
-                      maxSize(o1.path, 10),
-                      o1.mana,
-                      maxSize(o1.inventory, 10),
-                      o1.hp,
-                      o1.color);
+    void serialize(S &s, MyTypes::Monster &o) {
+        //Growable extension enables forward/backward compatibility
+        s.ext(o, ext::Growable{}, [&s](MyTypes::Monster &o1) {
+            s.value1b(o1.color);
+            s.value2b(o1.mana);
+            s.value2b(o1.hp);
+            s.object(o1.equipped);
+            s.object(o1.pos);
+            s.container(o1.path, 10);
+            s.container(o1.weapons, 10);
+            s.container1b(o1.inventory, 10);
+            s.text1b(o1.name, 10);
         });
     }
 }
 
 //enable forward/backward compatibility
-struct SessionEnabled:public bitsery::DefaultConfig {
+struct SessionEnabled : public bitsery::DefaultConfig {
     static constexpr bool BufferSessionsEnabled = true;
 };
 
@@ -72,30 +71,38 @@ using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
 using Writer = bitsery::AdapterWriter<OutputAdapter, SessionEnabled>;
 using Reader = bitsery::AdapterReader<InputAdapter, SessionEnabled>;
 
-class BitseryArchiver : public ISerializerTest {
+class BitseryCompatibilityArchiver : public ISerializerTest {
 public:
 
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
         _buf.clear();
 
-        bitsery::BasicSerializer<Writer> ser(OutputAdapter{_buf});
+        bitsery::BasicSerializer<Writer> ser(OutputAdapter { _buf });
         ser.container(data, 100000000);
-        auto& bw = bitsery::AdapterAccess::getWriter(ser);
+        auto &bw = bitsery::AdapterAccess::getWriter(ser);
         bw.flush();
         return Buf{std::addressof(*std::begin(_buf)), bw.writtenBytesCount()};
     }
 
     void deserialize(Buf buf, std::vector<MyTypes::Monster> &res) override {
 
-        bitsery::BasicDeserializer<Reader> des(InputAdapter{_buf.begin(), buf.bytesCount});
+        bitsery::BasicDeserializer<Reader> des(InputAdapter { _buf.begin(), buf.bytesCount });
         des.container(res, 100000000);
     }
+
+    TestInfo testInfo() const override {
+        return {
+                SerializationLibrary::BITSERY,
+                "compatibility",
+                "forward/backward compatibility enabled for `Monster`"
+        };
+    }
+
 private:
     Buffer _buf{};
 };
 
-int main () {
-    BitseryArchiver test{};
-    runTest("bitsery\n\tbuffer: std::vector<uint8_t>\n\tcompatibility enabled for Monster type", test, MONSTERS, SAMPLES);
-    return 0;
+int main() {
+    BitseryCompatibilityArchiver test{};
+    return runTest(test);
 }

@@ -1,0 +1,19 @@
+{
+  "name": "tools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "d3node-barchart": "0.0.6",
+    "d3node-output": "^1.0.1",
+    "markdown-escape": "^1.0.2",
+    "markdown-table": "^1.1.1",
+    "zen-observable": "^0.8.7"
+  }
+}

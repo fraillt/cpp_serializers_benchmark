@@ -21,24 +21,41 @@
 //SOFTWARE.
 
 
-#ifndef BITSERY_FLATBUFFERS_PERFORMANCE_TEST_H
-#define BITSERY_FLATBUFFERS_PERFORMANCE_TEST_H
+#ifndef CPP_SERIALIZERS_BENCHMARK_TESTING_CORE_TEST_H
+#define CPP_SERIALIZERS_BENCHMARK_TESTING_CORE_TEST_H
 
 #include <cstddef>
-#include <testing_core/types.h>
+#include <testing/types.h>
 
 struct Buf {
     const uint8_t* ptr;
     size_t bytesCount;
 };
 
+enum class SerializationLibrary {
+    BITSERY,
+    BOOST,
+    CEREAL,
+    HAND_WRITTEN,
+    FLATBUFFERS,
+    YAS
+};
+
+struct TestInfo {
+    SerializationLibrary library;
+    std::string name;
+    std::string info;
+};
+
 class ISerializerTest {
 public:
     virtual Buf serialize(const std::vector<MyTypes::Monster>& data) = 0;
     virtual void deserialize(Buf buf, std::vector<MyTypes::Monster>& res) = 0;
+    virtual TestInfo testInfo() const = 0;
     virtual ~ISerializerTest() = default;
 };
 
-void runTest(const std::string& name, ISerializerTest& archive, int monsterCount, int repeatCount);
+int runTest(ISerializerTest& archive);
+std::string getLibraryName(SerializationLibrary);
 
-#endif //BITSERY_FLATBUFFERS_PERFORMANCE_TEST_H
+#endif //CPP_SERIALIZERS_BENCHMARK_TESTING_CORE_TEST_H
