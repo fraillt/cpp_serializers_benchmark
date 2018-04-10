@@ -119,3 +119,19 @@ Testing routine consist of few steps:
 * measurement step, runs serialization and deserialization multiple times (default 300000 samples),
   deserialization happens on same object, to avoid costly allocate operations for new object construction each time.
 
+## Building & testing
+
+1. Build project
+    ```bash
+    mkdir build && cd build
+    cmake ..
+    make
+    ```
+2. Run tests with `ctest -VV` **OR**
+3. Generate testing results *(requires nodejs)*
+    ```bash
+    cd ../tools/
+    npm install
+    npm start
+    cat ./result/table.md
+    ```

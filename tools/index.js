@@ -33,7 +33,7 @@ function splitTests(testsCount) {
     return new Observable(observer => {
         let storage = Buffer.from([]);
         let currTestCase = 1;
-        const ctestProc = spawn("ctest", ["-I 1,1", "--verbose"], { cwd: BUILD_DIR });
+        const ctestProc = spawn("ctest", ["--verbose"], { cwd: BUILD_DIR });
         ctestProc.stdout.on('data', (buf) => {
             storage = Buffer.concat([storage, buf]);
             const start = storage.indexOf(`test ${currTestCase}\n`, "utf8");
