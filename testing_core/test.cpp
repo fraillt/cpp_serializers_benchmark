@@ -83,6 +83,8 @@ std::string getLibraryName(SerializationLibrary name) {
             return "flatbuffers";
         case SerializationLibrary::YAS:
             return "yas";
+        case SerializationLibrary::ZPP:
+            return "zpp";
     }
     throw "Unknown library name";
 }
