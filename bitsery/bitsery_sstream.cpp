@@ -61,15 +61,13 @@ using Buffer = std::stringstream;
 using InputAdapter = bitsery::InputStreamAdapter;
 //lets use buffered stream adatper
 using OutputAdapter = bitsery::OutputBufferedStreamAdapter;
-using Writer = bitsery::AdapterWriter<OutputAdapter, bitsery::DefaultConfig>;
-using Reader = bitsery::AdapterReader<InputAdapter, bitsery::DefaultConfig>;
 
 class BitseryStreamArchiver : public ISerializerTest {
 public:
 
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
         Buffer ss;
-        bitsery::BasicSerializer<Writer> ser(OutputAdapter { ss });
+        bitsery::Serializer<OutputAdapter> ser(OutputAdapter { ss });
         ser.container(data, 100000000);
         bitsery::AdapterAccess::getWriter(ser).flush();
         //copy only once to permanent buffer
@@ -85,7 +83,7 @@ public:
 
     void deserialize(Buf buf, std::vector<MyTypes::Monster> &res) override {
         std::stringstream ss(_buf);
-        bitsery::BasicDeserializer<Reader> des(InputAdapter { ss });
+        bitsery::Deserializer<InputAdapter> des(InputAdapter { ss });
         des.container(res, 100000000);
     }
 
