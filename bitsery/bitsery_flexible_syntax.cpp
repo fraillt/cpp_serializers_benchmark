@@ -59,8 +59,6 @@ namespace bitsery {
 using Buffer = std::vector<uint8_t>;
 using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
 using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
-using Writer = bitsery::AdapterWriter<OutputAdapter, bitsery::DefaultConfig>;
-using Reader = bitsery::AdapterReader<InputAdapter, bitsery::DefaultConfig>;
 
 class BitseryVerboseSyntaxArchiver : public ISerializerTest {
 public:
@@ -77,7 +75,7 @@ public:
 
     void deserialize(Buf buf, std::vector<MyTypes::Monster> &res) override {
 
-        bitsery::BasicDeserializer<Reader> des(InputAdapter { _buf.begin(), buf.bytesCount });
+        bitsery::Deserializer<InputAdapter> des(InputAdapter { _buf.begin(), buf.bytesCount });
         des.container(res, 100000000);
     }
 

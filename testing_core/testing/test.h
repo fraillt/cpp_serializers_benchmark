@@ -38,7 +38,8 @@ enum class SerializationLibrary {
     CEREAL,
     HAND_WRITTEN,
     FLATBUFFERS,
-    YAS
+    YAS,
+    ZPP
 };
 
 struct TestInfo {
