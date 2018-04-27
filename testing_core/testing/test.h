@@ -37,6 +37,7 @@ enum class SerializationLibrary {
     BOOST,
     CEREAL,
     HAND_WRITTEN,
+    IOSTREAM,
     FLATBUFFERS,
     YAS,
     ZPP

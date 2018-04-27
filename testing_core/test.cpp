@@ -79,6 +79,8 @@ std::string getLibraryName(SerializationLibrary name) {
             return "cereal";
         case SerializationLibrary::HAND_WRITTEN:
             return "handwritten";
+        case SerializationLibrary::IOSTREAM:
+            return "iostream";
         case SerializationLibrary::FLATBUFFERS:
             return "flatbuffers";
         case SerializationLibrary::YAS:
