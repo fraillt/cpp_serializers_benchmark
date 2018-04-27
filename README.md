@@ -23,9 +23,10 @@
 | flatbuffers | general                                                      | 66088B   | 14924B    | 7297ms   | 2789ms   |
 | handwritten | general[<sup>6</sup>](#additional-tests-information)         | 42736B   | 10413B    | 1045ms   | 885ms    |
 | handwritten | unsafe[<sup>7</sup>](#additional-tests-information)          | 38648B   | 10413B    | 1036ms   | 846ms    |
-| yas         | general[<sup>8</sup>](#additional-tests-information)         | 62976B   | 10463B    | 1613ms   | 1407ms   |
-| yas         | compression[<sup>9</sup>](#additional-tests-information)     | 71664B   | 7315B     | 2166ms   | 1595ms   |
-| yas         | stream[<sup>10</sup>](#additional-tests-information)         | 50112B   | 10463B    | 8514ms   | 7769ms   |
+| iostream    | general[<sup>8</sup>](#additional-tests-information)         | 48568B   | 8413B     | 8919ms   | 11966ms  |
+| yas         | general[<sup>9</sup>](#additional-tests-information)         | 62976B   | 10463B    | 1613ms   | 1407ms   |
+| yas         | compression[<sup>10</sup>](#additional-tests-information)    | 71664B   | 7315B     | 2166ms   | 1595ms   |
+| yas         | stream[<sup>11</sup>](#additional-tests-information)         | 50112B   | 10463B    | 8514ms   | 7769ms   |
 | zpp         | general                                                      | 44576B   | 8413B     | 1021ms   | 1061ms   |
 
 ## Clang 5.0.0 (Ubuntu 17.10 x64)
@@ -43,9 +44,10 @@
 | flatbuffers | general                                                      | 59616B   | 14924B    | 8973ms   | 2617ms   |
 | handwritten | general[<sup>6</sup>](#additional-tests-information)         | 39096B   | 10413B    | 1016ms   | 785ms    |
 | handwritten | unsafe[<sup>7</sup>](#additional-tests-information)          | 39096B   | 10413B    | 990ms    | 755ms    |
-| yas         | general[<sup>8</sup>](#additional-tests-information)         | 56016B   | 10463B    | 3065ms   | 1801ms   |
-| yas         | compression[<sup>9</sup>](#additional-tests-information)     | 55928B   | 7315B     | 3549ms   | 2306ms   |
-| yas         | stream[<sup>10</sup>](#additional-tests-information)         | 46440B   | 10463B    | 8387ms   | 7802ms   |
+| iostream    | general[<sup>8</sup>](#additional-tests-information)         | 40664B   | 8413B     | 8863ms   | 9267ms   |
+| yas         | general[<sup>9</sup>](#additional-tests-information)         | 56016B   | 10463B    | 3065ms   | 1801ms   |
+| yas         | compression[<sup>10</sup>](#additional-tests-information)    | 55928B   | 7315B     | 3549ms   | 2306ms   |
+| yas         | stream[<sup>11</sup>](#additional-tests-information)         | 46440B   | 10463B    | 8387ms   | 7802ms   |
 | zpp         | general                                                      | 48064B   | 8413B     | 1313ms   | 1124ms   |
 
 ### Additional tests information
@@ -53,13 +55,14 @@
 1. forward\/backward compatibility enabled for `Monster`
 2. all components of Vec3 is compressed in \[-1.0, 1.0\] range with precision 0.01
 3. use non-resizable buffer uint8\_t\[150000\] for serialization
-4. use stream input\/output adapter, underlying type is std::stringstream
-5. deserialization using `flexible` syntax, similar to `cereal`
+4. deserialization using `flexible` syntax, similar to `cereal`
+5. use stream input\/output adapter, underlying type is std::stringstream
 6. check buffer size on reading, but writing buffer is preallocated std::array&lt;uint8\_t, 1000000&gt;
 7. doesn't check for buffer size when reading, buffer: std::array&lt;uint8\_t, 1000000&gt;
-8. use yas::mem\_&lt;io&gt;stream as buffer
-9. with yas::no\_header and yas::compacted
-10. using std::stringstream
+8. use std::stringstream's internal std::string
+9. use yas::mem\_&lt;io&gt;stream as buffer
+10. with yas::no\_header and yas::compacted
+11. using std::stringstream
 
 ## Why another cpp serializers benchmark
 
