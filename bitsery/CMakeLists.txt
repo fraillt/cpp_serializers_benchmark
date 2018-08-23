@@ -4,8 +4,8 @@ set(bitsery_INCLUDE ${bitsery_PREFIX}/src/bitsery_dep/include)
 ExternalProject_Add(
         bitsery_dep
         PREFIX ${bitsery_PREFIX}
-        URL "https://github.com/fraillt/bitsery/archive/v4.2.1.tar.gz"
-        URL_MD5 "04ea26747e21927ceb27f5b0d00bce6b"
+        URL "https://github.com/fraillt/bitsery/archive/v4.3.0.tar.gz"
+        URL_MD5 "3ffb5b54ca73c1a04072d4b4edcee29c"
         CONFIGURE_COMMAND ""
         BUILD_COMMAND ""
         INSTALL_COMMAND ""

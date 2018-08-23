@@ -1,3 +1,8 @@
+# 2018-08-23
+
+* updated bitsery 4.2.1 -> 4.3.0
+* added bitsery tests that doesn't check for buffer size on deserialization
+
 # 2018-04-23
 
 * added pull request for zpp serializer
