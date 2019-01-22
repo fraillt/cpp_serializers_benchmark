@@ -56,8 +56,8 @@ public:
 
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
         std::stringstream ss;
-        yas::std_ostream os{ss};
-        yas::binary_oarchive<yas::std_ostream, yas::binary | yas::no_header> oa(os);
+        yas::std_ostream_adapter os{ss};
+        yas::binary_oarchive<yas::std_ostream_adapter, yas::binary | yas::no_header> oa(os);
         oa & data;
 
         if (_buf.empty())
@@ -70,8 +70,8 @@ public:
 
     void deserialize(Buf buf, std::vector<MyTypes::Monster> &resVec) override {
         std::stringstream ss{_buf};
-        yas::std_istream is(ss);
-        yas::binary_iarchive<yas::std_istream, yas::binary | yas::no_header> ia(is);
+        yas::std_istream_adapter is(ss);
+        yas::binary_iarchive<yas::std_istream_adapter, yas::binary | yas::no_header> ia(is);
 
         ia & resVec;
     }
