@@ -1,56 +1,56 @@
 # CPP serializers benchmark
 
 ### tested libraries
-* bitsery 4.3.0
-* boost 1.66.0
+* bitsery 4.5.1
+* boost 1.69.0
 * cereal 1.2.2
-* flatbuffers 1.8.0
-* yas 6.0.3
-* zpp 0.1
+* flatbuffers 1.10.0
+* yas 7.0.2
+* zpp 0.3
 
-## GCC 7.3.0 (Ubuntu 17.10 x64)
-
-| library     | test case                                                    | bin size | data size | ser time | des time |
-| ----------- | ------------------------------------------------------------ | -------- | --------- | -------- | -------- |
-| bitsery     | general                                                      | 64656B   | 6913B     | 1155ms   | 1210ms   |
-| bitsery     | compatibility[<sup>1</sup>](#additional-tests-information)   | 73240B   | 7016B     | 1196ms   | 1392ms   |
-| bitsery     | compression[<sup>2</sup>](#additional-tests-information)     | 64576B   | 4213B     | 1343ms   | 1329ms   |
-| bitsery     | fixed buffer[<sup>3</sup>](#additional-tests-information)    | 44184B   | 6913B     | 1103ms   | 1232ms   |
-| bitsery     | flexible syntax[<sup>4</sup>](#additional-tests-information) | 64072B   | 6913B     | 1112ms   | 1002ms   |
-| bitsery     | stream[<sup>5</sup>](#additional-tests-information)          | 54080B   | 6913B     | 1562ms   | 4380ms   |
-| bitsery     | unsafe read[<sup>6</sup>](#additional-tests-information)     | 64744B   | 6913B     | 1177ms   | 1157ms   |
-| boost       | general                                                      | 265560B  | 11037B    | 10248ms  | 8114ms   |
-| cereal      | general                                                      | 73632B   | 10413B    | 6275ms   | 5347ms   |
-| flatbuffers | general                                                      | 66088B   | 14924B    | 7135ms   | 2769ms   |
-| handwritten | general[<sup>7</sup>](#additional-tests-information)         | 42736B   | 10413B    | 1012ms   | 890ms    |
-| handwritten | unsafe[<sup>8</sup>](#additional-tests-information)          | 38648B   | 10413B    | 1033ms   | 825ms    |
-| iostream    | general[<sup>9</sup>](#additional-tests-information)         | 48568B   | 8413B     | 8046ms   | 9000ms   |
-| yas         | general[<sup>10</sup>](#additional-tests-information)        | 62976B   | 10463B    | 1561ms   | 1365ms   |
-| yas         | compression[<sup>11</sup>](#additional-tests-information)    | 71664B   | 7315B     | 2162ms   | 1533ms   |
-| yas         | stream[<sup>12</sup>](#additional-tests-information)         | 50112B   | 10463B    | 7977ms   | 7907ms   |
-| zpp         | general                                                      | 44576B   | 8413B     | 1047ms   | 1101ms   |
-
-## Clang 5.0.1 (Ubuntu 17.10 x64)
+## GCC 8.2.0 (Ubuntu 18.04 x64)
 
 | library     | test case                                                    | bin size | data size | ser time | des time |
 | ----------- | ------------------------------------------------------------ | -------- | --------- | -------- | -------- |
-| bitsery     | general                                                      | 49104B   | 6913B     | 1398ms   | 1397ms   |
-| bitsery     | compatibility[<sup>1</sup>](#additional-tests-information)   | 56000B   | 7016B     | 1545ms   | 1670ms   |
-| bitsery     | compression[<sup>2</sup>](#additional-tests-information)     | 50208B   | 4213B     | 2683ms   | 3601ms   |
-| bitsery     | fixed buffer[<sup>3</sup>](#additional-tests-information)    | 44864B   | 6913B     | 1015ms   | 1386ms   |
-| bitsery     | flexible syntax[<sup>4</sup>](#additional-tests-information) | 51240B   | 6913B     | 1833ms   | 1430ms   |
-| bitsery     | stream[<sup>5</sup>](#additional-tests-information)          | 50800B   | 6913B     | 1709ms   | 4341ms   |
-| bitsery     | unsafe read[<sup>6</sup>](#additional-tests-information)     | 49384B   | 6913B     | 1438ms   | 970ms    |
-| boost       | general                                                      | 222944B  | 11037B    | 11256ms  | 9588ms   |
-| cereal      | general                                                      | 57560B   | 10413B    | 7384ms   | 6166ms   |
-| flatbuffers | general                                                      | 59752B   | 14924B    | 8853ms   | 2468ms   |
-| handwritten | general[<sup>7</sup>](#additional-tests-information)         | 39232B   | 10413B    | 975ms    | 791ms    |
-| handwritten | unsafe[<sup>8</sup>](#additional-tests-information)          | 39232B   | 10413B    | 978ms    | 762ms    |
-| iostream    | general[<sup>9</sup>](#additional-tests-information)         | 40800B   | 8413B     | 8096ms   | 8795ms   |
-| yas         | general[<sup>10</sup>](#additional-tests-information)        | 56152B   | 10463B    | 2970ms   | 1860ms   |
-| yas         | compression[<sup>11</sup>](#additional-tests-information)    | 56064B   | 7315B     | 3571ms   | 2296ms   |
-| yas         | stream[<sup>12</sup>](#additional-tests-information)         | 46576B   | 10463B    | 7675ms   | 7564ms   |
-| zpp         | general                                                      | 48200B   | 8413B     | 1336ms   | 1128ms   |
+| bitsery     | general                                                      | 69576B   | 6913B     | 1291ms   | 1199ms   |
+| bitsery     | compatibility[<sup>1</sup>](#additional-tests-information)   | 82824B   | 7016B     | 1334ms   | 1293ms   |
+| bitsery     | compression[<sup>2</sup>](#additional-tests-information)     | 69496B   | 4213B     | 1518ms   | 1297ms   |
+| bitsery     | fixed buffer[<sup>3</sup>](#additional-tests-information)    | 44864B   | 6913B     | 1082ms   | 1197ms   |
+| bitsery     | flexible syntax[<sup>4</sup>](#additional-tests-information) | 73272B   | 6913B     | 1218ms   | 1045ms   |
+| bitsery     | stream[<sup>5</sup>](#additional-tests-information)          | 50616B   | 6913B     | 1687ms   | 4584ms   |
+| bitsery     | unsafe read[<sup>6</sup>](#additional-tests-information)     | 69672B   | 6913B     | 1241ms   | 1189ms   |
+| boost       | general                                                      | 270072B  | 11037B    | 10380ms  | 9038ms   |
+| cereal      | general                                                      | 81328B   | 10413B    | 6907ms   | 5485ms   |
+| flatbuffers | general                                                      | 70200B   | 14924B    | 7370ms   | 2567ms   |
+| handwritten | general[<sup>7</sup>](#additional-tests-information)         | 39384B   | 10413B    | 1069ms   | 978ms    |
+| handwritten | unsafe[<sup>8</sup>](#additional-tests-information)          | 39392B   | 10413B    | 1107ms   | 857ms    |
+| iostream    | general[<sup>9</sup>](#additional-tests-information)         | 49040B   | 8413B     | 7859ms   | 8898ms   |
+| yas         | general[<sup>10</sup>](#additional-tests-information)        | 59688B   | 10463B    | 1336ms   | 1175ms   |
+| yas         | compression[<sup>11</sup>](#additional-tests-information)    | 72944B   | 7315B     | 2066ms   | 1624ms   |
+| yas         | stream[<sup>12</sup>](#additional-tests-information)         | 50992B   | 10463B    | 7876ms   | 7899ms   |
+| zpp         | general                                                      | 45472B   | 8413B     | 1065ms   | 1129ms   |
+
+## Clang 8.0.0 (Ubuntu 18.04 x64)
+
+| library     | test case                                                    | bin size | data size | ser time | des time |
+| ----------- | ------------------------------------------------------------ | -------- | --------- | -------- | -------- |
+| bitsery     | general                                                      | 45048B   | 6913B     | 1817ms   | 1448ms   |
+| bitsery     | compatibility[<sup>1</sup>](#additional-tests-information)   | 55848B   | 7016B     | 1985ms   | 1745ms   |
+| bitsery     | compression[<sup>2</sup>](#additional-tests-information)     | 49936B   | 4213B     | 3038ms   | 3111ms   |
+| bitsery     | fixed buffer[<sup>3</sup>](#additional-tests-information)    | 40352B   | 6913B     | 1072ms   | 1461ms   |
+| bitsery     | flexible syntax[<sup>4</sup>](#additional-tests-information) | 50608B   | 6913B     | 1989ms   | 1552ms   |
+| bitsery     | stream[<sup>5</sup>](#additional-tests-information)          | 46336B   | 6913B     | 1754ms   | 4292ms   |
+| bitsery     | unsafe read[<sup>6</sup>](#additional-tests-information)     | 44960B   | 6913B     | 1894ms   | 973ms    |
+| boost       | general                                                      | 235680B  | 11037B    | 11883ms  | 10589ms  |
+| cereal      | general                                                      | 53192B   | 10413B    | 7472ms   | 6139ms   |
+| flatbuffers | general                                                      | 58072B   | 14924B    | 8026ms   | 2806ms   |
+| handwritten | general[<sup>7</sup>](#additional-tests-information)         | 38920B   | 10413B    | 983ms    | 779ms    |
+| handwritten | unsafe[<sup>8</sup>](#additional-tests-information)          | 38920B   | 10413B    | 974ms    | 783ms    |
+| iostream    | general[<sup>9</sup>](#additional-tests-information)         | 40600B   | 8413B     | 8138ms   | 8907ms   |
+| yas         | general[<sup>10</sup>](#additional-tests-information)        | 46840B   | 10463B    | 1402ms   | 1010ms   |
+| yas         | compression[<sup>11</sup>](#additional-tests-information)    | 51504B   | 7315B     | 1963ms   | 1540ms   |
+| yas         | stream[<sup>12</sup>](#additional-tests-information)         | 46352B   | 10463B    | 7678ms   | 7767ms   |
+| zpp         | general                                                      | 47896B   | 8413B     | 1345ms   | 1191ms   |
 
 ### Additional tests information
 

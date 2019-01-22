@@ -1,3 +1,16 @@
+# 2019-01-22
+
+* updated bitsery 4.3.0 -> 4.5.1
+* updated boost 1.66.0 -> 1.69.0
+* updated flatbuffers 1.8.0 -> 1.10.0
+* updated yas 6.0.3 -> 7.0.2
+* updated zpp 0.1 -> 0.3
+* updated compilers
+  * gcc 7.3.0 -> 8.2.0
+  * clang 5.0.1 -> 8.0.0
+* updated test environment
+  * ubuntu 17.10 -> 18.04
+
 # 2018-08-23
 
 * updated bitsery 4.2.1 -> 4.3.0
