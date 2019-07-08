@@ -1,3 +1,11 @@
+# 2019-07-09
+
+* added protobuf tests
+* updated bitsery 4.5.1 -> 5.0.0
+* updated boost 1.69.0 -> 1.70.0
+* updated flatbuffers 1.10.0 -> 1.11.0
+* optimized flatbuffers serialization
+
 # 2019-01-22
 
 * updated bitsery 4.3.0 -> 4.5.1

@@ -65,25 +65,22 @@ public:
 
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
         _buf.clear();
-
-        bitsery::Serializer<OutputAdapter> ser(OutputAdapter { _buf });
+        bitsery::Serializer<OutputAdapter> ser(_buf);
         ser.container(data, 100000000);
-        auto &bw = bitsery::AdapterAccess::getWriter(ser);
-        bw.flush();
-        return Buf{std::addressof(*std::begin(_buf)), bw.writtenBytesCount()};
+        ser.adapter().flush();
+        return Buf{std::addressof(*std::begin(_buf)), ser.adapter().writtenBytesCount()};
     }
 
     void deserialize(Buf buf, std::vector<MyTypes::Monster> &res) override {
-
-        bitsery::Deserializer<InputAdapter> des(InputAdapter { _buf.begin(), buf.bytesCount });
+        bitsery::Deserializer<InputAdapter> des(_buf.begin(), buf.bytesCount);
         des.container(res, 100000000);
     }
 
     TestInfo testInfo() const override {
         return {
-                SerializationLibrary::BITSERY,
-                "general",
-                ""
+            SerializationLibrary::BITSERY,
+            "general",
+            ""
         };
     }
 

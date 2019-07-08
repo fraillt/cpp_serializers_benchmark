@@ -38,10 +38,12 @@ public:
         _builder.Clear();
         std::vector<flatbuffers::Offset < Monster>>
         monstersVec{};
+        monstersVec.reserve(data.size());
         for (auto &m:data) {
             // Create a FlatBuffer's `vector` from the `std::vector`.
             std::vector<flatbuffers::Offset < Weapon>>
             weaponsVec{};
+            weaponsVec.reserve(m.weapons.size());
             for (auto &w:m.weapons)
                 weaponsVec.push_back(createWeapon(_builder, w));
             auto weapons = _builder.CreateVector(weaponsVec);
@@ -51,10 +53,10 @@ public:
             auto name = _builder.CreateString(m.name);
             auto inventory = _builder.CreateVector(m.inventory);
             std::vector<Vec3> pathVec{};
+            pathVec.reserve(m.path.size());
             for (auto &p:m.path)
                 pathVec.push_back(Vec3(p.x, p.y, p.z));
             auto path = _builder.CreateVectorOfStructs(pathVec);
-            auto equiped = createWeapon(_builder, m.equipped);
 
             // Shortcut for creating monster with all fields set:
             monstersVec.push_back(
@@ -66,7 +68,7 @@ public:
                                   inventory,
                                   static_cast<Color>(m.color),
                                   weapons,
-                                  equiped,
+                                  createWeapon(_builder, m.equipped),
                                   path));
         }
         auto monsters = _builder.CreateVector(monstersVec);

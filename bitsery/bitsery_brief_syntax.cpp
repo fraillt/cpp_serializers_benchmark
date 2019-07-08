@@ -23,27 +23,27 @@
 #include <testing/test.h>
 #include <bitsery/bitsery.h>
 #include <bitsery/adapter/buffer.h>
-#include <bitsery/flexible.h>
-#include <bitsery/flexible/vector.h>
-#include <bitsery/flexible/string.h>
+#include <bitsery/brief_syntax.h>
+#include <bitsery/brief_syntax/vector.h>
+#include <bitsery/brief_syntax/string.h>
 
 
 namespace bitsery {
 
     template<typename S>
     void serialize(S &s, MyTypes::Vec3 &o) {
-        s.archive(o.x, o.y, o.z);
+        s(o.x, o.y, o.z);
     }
 
     template<typename S>
     void serialize(S &s, MyTypes::Weapon &o) {
-        s.archive(maxSize(o.name, 10),//this maxSize function is optional
+        s(maxSize(o.name, 10),//this maxSize function is optional
                   o.damage);
     }
 
     template<typename S>
     void serialize(S &s, MyTypes::Monster &o) {
-        s.archive(maxSize(o.name, 10),
+        s(maxSize(o.name, 10),
                   o.equipped,
                   maxSize(o.weapons, 10),
                   o.pos,
@@ -65,25 +65,22 @@ public:
 
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
         _buf.clear();
-
-        bitsery::Serializer<OutputAdapter> ser(OutputAdapter { _buf });
+        bitsery::Serializer<OutputAdapter> ser(_buf);
         ser.container(data, 100000000);
-        auto &bw = bitsery::AdapterAccess::getWriter(ser);
-        bw.flush();
-        return Buf{std::addressof(*std::begin(_buf)), bw.writtenBytesCount()};
+        ser.adapter().flush();
+        return Buf{std::addressof(*std::begin(_buf)), ser.adapter().writtenBytesCount()};
     }
 
     void deserialize(Buf buf, std::vector<MyTypes::Monster> &res) override {
-
-        bitsery::Deserializer<InputAdapter> des(InputAdapter { _buf.begin(), buf.bytesCount });
+        bitsery::Deserializer<InputAdapter> des(_buf.begin(), buf.bytesCount);
         des.container(res, 100000000);
     }
 
     TestInfo testInfo() const override {
         return {
                 SerializationLibrary::BITSERY,
-                "flexible syntax",
-                "deserialization using `flexible` syntax, similar to `cereal`"
+                "brief syntax",
+                "deserialization using `brief_syntax`, similar to `cereal`"
         };
     }
 

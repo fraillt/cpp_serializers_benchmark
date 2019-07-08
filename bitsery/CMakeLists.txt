@@ -4,8 +4,8 @@ set(bitsery_INCLUDE ${bitsery_PREFIX}/src/bitsery_dep/include)
 ExternalProject_Add(
         bitsery_dep
         PREFIX ${bitsery_PREFIX}
-        URL "https://github.com/fraillt/bitsery/archive/v4.5.1.tar.gz"
-        URL_MD5 "83da9734b476f9d090691ead51802f39"
+        URL "https://github.com/fraillt/bitsery/archive/v5.0.0.tar.gz"
+        URL_MD5 "9b3729addc58aaf891be3ddc557fff7d"
         CONFIGURE_COMMAND ""
         BUILD_COMMAND ""
         INSTALL_COMMAND ""
@@ -14,7 +14,6 @@ ExternalProject_Add(
 file(GLOB ExampleFiles ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 foreach(ExampleFile ${ExampleFiles})
     get_filename_component(ExampleName ${ExampleFile} NAME_WE)
-
     add_executable(${ExampleName} ${ExampleFile})
     add_dependencies(${ExampleName} bitsery_dep)
     target_include_directories(${ExampleName} PUBLIC ${bitsery_INCLUDE})

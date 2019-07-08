@@ -56,11 +56,15 @@ namespace bitsery {
 
 }
 
+struct DisableErrorChecksConfig {
+    static constexpr bitsery::EndiannessType Endianness = bitsery::DefaultConfig::Endianness;
+    static constexpr bool CheckAdapterErrors = false;
+    static constexpr bool CheckDataErrors = false;
+};
+
 using Buffer = std::vector<uint8_t>;
-using InputAdapter = bitsery::UnsafeInputBufferAdapter<Buffer>;
-using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
-using Writer = bitsery::AdapterWriter<OutputAdapter, bitsery::DefaultConfig>;
-using Reader = bitsery::AdapterReader<InputAdapter, bitsery::DefaultConfig>;
+using InputAdapter = bitsery::InputBufferAdapter<Buffer, DisableErrorChecksConfig>;
+using OutputAdapter = bitsery::OutputBufferAdapter<Buffer, DisableErrorChecksConfig>;
 
 class BitseryUnsafeArchiver : public ISerializerTest {
 public:
@@ -68,16 +72,14 @@ public:
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
         _buf.clear();
 
-        bitsery::Serializer<OutputAdapter> ser(OutputAdapter { _buf });
+        bitsery::Serializer<OutputAdapter> ser(_buf);
         ser.container(data, 100000000);
-        auto &bw = bitsery::AdapterAccess::getWriter(ser);
-        bw.flush();
-        return Buf{std::addressof(*std::begin(_buf)), bw.writtenBytesCount()};
+        ser.adapter().flush();
+        return Buf{std::addressof(*std::begin(_buf)), ser.adapter().writtenBytesCount()};
     }
 
     void deserialize(Buf buf, std::vector<MyTypes::Monster> &res) override {
-
-        bitsery::BasicDeserializer<Reader> des(InputAdapter { _buf.begin(), buf.bytesCount });
+        bitsery::Deserializer<InputAdapter> des(_buf.begin(), buf.bytesCount);
         des.container(res, 100000000);
     }
 
@@ -85,7 +87,7 @@ public:
         return {
                 SerializationLibrary::BITSERY,
                 "unsafe read",
-                "on deserialization do not check for buffer end"
+                "on deserialization do not check for errors"
         };
     }
 

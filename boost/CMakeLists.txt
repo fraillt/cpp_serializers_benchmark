@@ -14,8 +14,8 @@ set(boost_INCLUDE ${boost_PREFIX}/src/boost_dep)
 ExternalProject_Add(
         boost_dep
         PREFIX ${boost_PREFIX}
-        URL "https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.tar.gz"
-        URL_MD5 "b50944c0c13f81ce2c006802a1186f5a"
+        URL "https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.tar.gz"
+        URL_MD5 "fea771fe8176828fabf9c09242ee8c26"
         CONFIGURE_COMMAND ${boost_PREFIX}/src/boost_dep/${boost_CMDbootstrap} --with-libraries=serialization --prefix=${boost_PREFIX}
         BUILD_COMMAND ./${boost_CMDb2} --with-serialization
         INSTALL_COMMAND ""

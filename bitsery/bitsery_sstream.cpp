@@ -67,9 +67,9 @@ public:
 
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
         Buffer ss;
-        bitsery::Serializer<OutputAdapter> ser(OutputAdapter { ss });
+        bitsery::Serializer<OutputAdapter> ser(ss);
         ser.container(data, 100000000);
-        bitsery::AdapterAccess::getWriter(ser).flush();
+        ser.adapter().flush();
         //copy only once to permanent buffer
         if (_buf.empty()) {
             _buf = ss.str();
@@ -83,7 +83,7 @@ public:
 
     void deserialize(Buf buf, std::vector<MyTypes::Monster> &res) override {
         std::stringstream ss(_buf);
-        bitsery::Deserializer<InputAdapter> des(InputAdapter { ss });
+        bitsery::Deserializer<InputAdapter> des(ss);
         des.container(res, 100000000);
     }
 

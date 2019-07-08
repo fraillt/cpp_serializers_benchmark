@@ -46,7 +46,7 @@ namespace bitsery {
     template<typename S>
     void serialize(S &s, MyTypes::Monster &o) {
         //Growable extension enables forward/backward compatibility
-        s.ext(o, ext::Growable{}, [&s](MyTypes::Monster &o1) {
+        s.ext(o, ext::Growable{}, [](S& s, MyTypes::Monster &o1) {
             s.value1b(o1.color);
             s.value2b(o1.mana);
             s.value2b(o1.hp);
@@ -68,25 +68,20 @@ struct SessionEnabled : public bitsery::DefaultConfig {
 using Buffer = std::vector<uint8_t>;
 using InputAdapter = bitsery::InputBufferAdapter<Buffer>;
 using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
-using Writer = bitsery::AdapterWriter<OutputAdapter, SessionEnabled>;
-using Reader = bitsery::AdapterReader<InputAdapter, SessionEnabled>;
 
 class BitseryCompatibilityArchiver : public ISerializerTest {
 public:
 
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
         _buf.clear();
-
-        bitsery::BasicSerializer<Writer> ser(OutputAdapter { _buf });
+        bitsery::Serializer<OutputAdapter> ser{_buf};
         ser.container(data, 100000000);
-        auto &bw = bitsery::AdapterAccess::getWriter(ser);
-        bw.flush();
-        return Buf{std::addressof(*std::begin(_buf)), bw.writtenBytesCount()};
+        ser.adapter().flush();
+        return Buf{std::addressof(*std::begin(_buf)), ser.adapter().writtenBytesCount()};
     }
 
     void deserialize(Buf buf, std::vector<MyTypes::Monster> &res) override {
-
-        bitsery::BasicDeserializer<Reader> des(InputAdapter { _buf.begin(), buf.bytesCount });
+        bitsery::Deserializer<InputAdapter> des( _buf.begin(), buf.bytesCount );
         des.container(res, 100000000);
     }
 

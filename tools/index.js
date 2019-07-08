@@ -94,6 +94,7 @@ function generateTable(data) {
     let res = table(tableRows);
     res += "\n\n### Additional tests information\n\n"
     res += additionalInfo.map((info, i) => escape(`${i + 1}. ${info}`)).join("\n");
+    res += "\n";
     return res;
 }
 
@@ -116,7 +117,9 @@ getNumberOfTests()
         if (!fs.existsSync(RESULT_DIR))
             fs.mkdirSync(RESULT_DIR);
         fs.writeFileSync(`${RESULT_DIR}/data.json`, JSON.stringify(data, null, 2));
-        fs.writeFileSync(`${RESULT_DIR}/table.md`, generateTable(data));
+        const text = generateTable(data);
+        fs.writeFileSync(`${RESULT_DIR}/table.md`, text);
+        console.log(text);
         // return generateChart(`${RESULT_DIR}/chart.serialize`, data.map(test => ({ key: `${test.library}.${test.name}`, value: test.serialize })))
         // .then(() => generateChart("./chart.datasize", data.map(test => ({ key: `${test.library}.${test.name}`, value: test.dataSize }))))
         // .then(() => generateChart(`${RESULT_DIR}/chart.serialize`, data.map(test => ({ key: `${test.library}.${test.name}`, value: test.deserialize }))))

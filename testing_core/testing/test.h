@@ -36,9 +36,10 @@ enum class SerializationLibrary {
     BITSERY,
     BOOST,
     CEREAL,
+    FLATBUFFERS,
     HAND_WRITTEN,
     IOSTREAM,
-    FLATBUFFERS,
+    PROTOBUF,
     YAS,
     ZPP
 };

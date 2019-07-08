@@ -64,17 +64,15 @@ class BitseryFixedBufferArchiver : public ISerializerTest {
 public:
 
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
-
-        bitsery::Serializer<OutputAdapter> ser(OutputAdapter { _buf });
+        bitsery::Serializer<OutputAdapter> ser(_buf);
         ser.container(data, 100000000);
-        auto &bw = bitsery::AdapterAccess::getWriter(ser);
-        bw.flush();
-        return Buf{std::addressof(*std::begin(_buf)), bw.writtenBytesCount()};
+        ser.adapter().flush();
+        return Buf{std::addressof(*std::begin(_buf)), ser.adapter().writtenBytesCount()};
 
     }
 
     void deserialize(Buf buf, std::vector<MyTypes::Monster> &res) override {
-        bitsery::Deserializer<InputAdapter> des(InputAdapter { buf.ptr, buf.bytesCount });
+        bitsery::Deserializer<InputAdapter> des(buf.ptr, buf.bytesCount);
         des.container(res, 100000000);
     }
 

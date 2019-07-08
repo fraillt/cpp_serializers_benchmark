@@ -77,12 +77,14 @@ std::string getLibraryName(SerializationLibrary name) {
             return "boost";
         case SerializationLibrary::CEREAL:
             return "cereal";
+        case SerializationLibrary::FLATBUFFERS:
+            return "flatbuffers";
         case SerializationLibrary::HAND_WRITTEN:
             return "handwritten";
         case SerializationLibrary::IOSTREAM:
             return "iostream";
-        case SerializationLibrary::FLATBUFFERS:
-            return "flatbuffers";
+        case SerializationLibrary::PROTOBUF:
+            return "protobuf";
         case SerializationLibrary::YAS:
             return "yas";
         case SerializationLibrary::ZPP:
