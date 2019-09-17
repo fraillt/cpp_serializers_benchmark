@@ -21,9 +21,7 @@
 //SOFTWARE.
 
 #include <testing/test.h>
-#include <yas/mem_streams.hpp>
-#include <yas/binary_iarchive.hpp>
-#include <yas/binary_oarchive.hpp>
+#include <yas/serialize.hpp>
 #include <yas/types/std/vector.hpp>
 #include <yas/types/std/string.hpp>
 
@@ -51,21 +49,13 @@ class YasArchiver : public ISerializerTest {
 public:
 
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
-        yas::mem_ostream os;
-        yas::binary_oarchive<yas::mem_ostream, yas::binary | yas::no_header> oa(os);
-        oa & data;
-        if (_buf.size == 0)
-            _buf = os.get_shared_buffer();
+        _buf = yas::save<yas::mem | yas::binary | yas::no_header>(data);
 
         return {reinterpret_cast<const uint8_t *>(_buf.data.get()), _buf.size};
     }
 
     void deserialize(Buf buf, std::vector<MyTypes::Monster> &resVec) override {
-
-        yas::mem_istream is(buf.ptr, buf.bytesCount);
-        yas::binary_iarchive<yas::mem_istream, yas::binary | yas::no_header> ia(is);
-
-        ia & resVec;
+        yas::load<yas::mem | yas::binary | yas::no_header>(_buf, resVec);
     }
 
     TestInfo testInfo() const override {

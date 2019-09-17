@@ -23,11 +23,7 @@
 #include <testing/test.h>
 
 #include <sstream>
-#include <yas/std_streams.hpp>
-
-#include <yas/binary_iarchive.hpp>
-#include <yas/binary_oarchive.hpp>
-//#include <yas/std_types.hpp>
+#include <yas/serialize.hpp>
 #include <yas/types/std/vector.hpp>
 #include <yas/types/std/string.hpp>
 
@@ -57,30 +53,28 @@ public:
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
         std::stringstream ss;
         yas::std_ostream_adapter os{ss};
-        yas::binary_oarchive<yas::std_ostream_adapter, yas::binary | yas::no_header> oa(os);
-        oa & data;
+        yas::save<yas::file | yas::binary | yas::no_header>(os, data);
 
         if (_buf.empty())
             _buf = ss.str();
+
         return {
-                reinterpret_cast<uint8_t *>(std::addressof(*_buf.begin())),
-                _buf.size()
+            reinterpret_cast<uint8_t *>(std::addressof(*_buf.begin())),
+            _buf.size()
         };
     }
 
     void deserialize(Buf buf, std::vector<MyTypes::Monster> &resVec) override {
         std::stringstream ss{_buf};
         yas::std_istream_adapter is(ss);
-        yas::binary_iarchive<yas::std_istream_adapter, yas::binary | yas::no_header> ia(is);
-
-        ia & resVec;
+        yas::load<yas::file | yas::binary | yas::no_header>(is, resVec);
     }
 
     TestInfo testInfo() const override {
         return {
-                SerializationLibrary::YAS,
-                "stream",
-                "using std::stringstream"
+            SerializationLibrary::YAS,
+            "stream",
+            "using std::stringstream"
         };
     }
 
