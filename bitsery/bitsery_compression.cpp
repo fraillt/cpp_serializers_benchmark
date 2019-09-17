@@ -69,7 +69,7 @@ class BitseryCompressionArchiver : public ISerializerTest {
 public:
 
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
-        _buf.clear();
+        _buf = Buffer{};
         bitsery::Serializer<OutputAdapter> ser(_buf);
         ser.container(data, 100000000);
         ser.adapter().flush();
