@@ -1,3 +1,12 @@
+# 2020-01-29
+
+* updated bitsery 5.0.0 -> 5.0.3
+* updated boost 1.70.0 -> 1.72.0
+* updated cereal 1.2.2 -> 1.3.0
+* updated yas 7.0.2 -> 7.0.5
+* updated protobuf 3.8.0 -> 3.11.2
+* updated zpp 0.3 -> 0.4
+
 # 2019-07-09
 
 * added protobuf tests

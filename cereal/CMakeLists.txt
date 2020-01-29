@@ -3,8 +3,8 @@ set(cereal_INCLUDE ${cereal_PREFIX}/src/cereal_dep/include)
 ExternalProject_Add(
         cereal_dep
         PREFIX ${cereal_PREFIX}
-        URL "https://github.com/USCiLab/cereal/archive/v1.2.2.tar.gz"
-        URL_MD5 "4C56C7B9499DBA79404250EF9A040481"
+        URL "https://github.com/USCiLab/cereal/archive/v1.3.0.tar.gz"
+        URL_MD5 "4342e811f245403646c4175258f413f1"
         CONFIGURE_COMMAND ""
         BUILD_COMMAND ""
         INSTALL_COMMAND ""

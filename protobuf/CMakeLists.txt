@@ -3,8 +3,8 @@ set(protobuf_INCLUDE ${protobuf_PREFIX}/include)
 ExternalProject_Add(
         protobuf_dep
         PREFIX ${protobuf_PREFIX}
-        URL "https://github.com/protocolbuffers/protobuf/releases/download/v3.8.0/protobuf-cpp-3.8.0.tar.gz"
-        URL_MD5 "9054bb5571905a28b3ae787d1d6cf8de"
+        URL "https://github.com/protocolbuffers/protobuf/releases/download/v3.11.2/protobuf-cpp-3.11.2.tar.gz"
+        URL_MD5 "351a0f5c4edd3f45035417f09133ce73"
         CONFIGURE_COMMAND ${CMAKE_COMMAND} -DCMAKE_INSTALL_PREFIX=${protobuf_PREFIX}
             -DCMAKE_BUILD_TYPE=Release -Dprotobuf_BUILD_TESTS=OFF
             <SOURCE_DIR>/cmake
