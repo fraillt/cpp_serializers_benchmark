@@ -10,10 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "d3node-barchart": "0.0.6",
+    "d3node-barchart": "^0.1.1",
     "d3node-output": "^1.0.2",
     "markdown-escape": "^1.0.2",
-    "markdown-table": "^1.1.2",
+    "markdown-table": "^2.0.0",
     "zen-observable": "^0.8.11"
   }
 }
