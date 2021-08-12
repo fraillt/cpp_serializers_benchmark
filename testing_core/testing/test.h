@@ -39,6 +39,7 @@ enum class SerializationLibrary {
     FLATBUFFERS,
     HAND_WRITTEN,
     IOSTREAM,
+    MSGPACK,
     PROTOBUF,
     YAS,
     ZPP
