@@ -9,12 +9,10 @@ endif()
 ExternalProject_Add(
         protobuf_dep
         PREFIX ${protobuf_PREFIX}
-        URL "https://github.com/protocolbuffers/protobuf/releases/download/v3.11.2/protobuf-cpp-3.11.2.tar.gz"
-        URL_MD5 "351a0f5c4edd3f45035417f09133ce73"
+        URL "https://github.com/protocolbuffers/protobuf/releases/download/v3.17.3/protobuf-cpp-3.17.3.tar.gz"
+        URL_MD5 "3fe4c2647e0991c014a386a896d0a116"
         CONFIGURE_COMMAND ${CMAKE_COMMAND} -DCMAKE_INSTALL_PREFIX=${protobuf_PREFIX}
-            -DCMAKE_BUILD_TYPE=Release -Dprotobuf_BUILD_TESTS=OFF ${protobuf_CONFIGURE_COMMAND_EXTRA}
-            -DCMAKE_CXX_STANDARD=17 -DCMAKE_C_COMPILER='aarch64-linux-gnu-gcc' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-c++'  -DCMAKE_SYSTEM_PROCESSOR=aarch64
-            -DCMAKE_ASM_FLAGS='-x assembler-with-cpp' -DCMAKE_LINK_FLAGS='-lc++ -Wl,--export-dynamic'
+            -DCMAKE_BUILD_TYPE=Release -Dprotobuf_BUILD_TESTS=OFF
             <SOURCE_DIR>/cmake
         LOG_UPDATE ON
         LOG_CONFIGURE ON

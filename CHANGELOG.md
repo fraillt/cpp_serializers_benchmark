@@ -1,3 +1,13 @@
+# 2021-08-23
+
+* updated bitsery 5.0.3 -> 5.2.1
+* updated boost 1.72.0 -> 1.77.0
+* updated flatbuufers 1.11.0 -> 2.0.0
+* updated protobuf 3.11.2 -> 3.17.3
+* updated yas 7.0.5 -> 7.1.0
+* updated zpp 0.4 -> 0.5
+* added msgpack 3.3.0 (thanks to [cnx-tcsikos](https://github.com/cnx-tcsikos))
+
 # 2020-01-29
 
 * updated bitsery 5.0.0 -> 5.0.3

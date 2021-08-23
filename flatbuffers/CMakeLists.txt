@@ -3,8 +3,8 @@ set(flatbuffers_INCLUDE ${flatbuffers_PREFIX}/include)
 ExternalProject_Add(
         flatbuffers_dep
         PREFIX ${flatbuffers_PREFIX}
-        URL "https://github.com/google/flatbuffers/archive/v1.11.0.tar.gz"
-        URL_MD5 "02c64880acb89dbd57eebacfd67200d8"
+        URL "https://github.com/google/flatbuffers/archive/refs/tags/v2.0.0.tar.gz"
+        URL_MD5 "a27992324c3cbf86dd888268a23d17bd"
         CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${flatbuffers_PREFIX} -DCMAKE_BUILD_TYPE=Release
         LOG_UPDATE ON
         LOG_CONFIGURE ON

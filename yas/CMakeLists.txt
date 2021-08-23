@@ -3,8 +3,8 @@ set(yas_INCLUDE ${yas_PREFIX}/src/yas_dep/include)
 ExternalProject_Add(
         yas_dep
         PREFIX ${yas_PREFIX}
-        URL "https://github.com/niXman/yas/archive/7.0.5.tar.gz"
-        URL_MD5 "8c666d29575c8cafe9cea1fc2946253e"
+        URL "https://github.com/niXman/yas/archive/7.1.0.tar.gz"
+        URL_MD5 "91b86037720a1971525e33bb62f20db7"
         CONFIGURE_COMMAND ""
         BUILD_COMMAND ""
         INSTALL_COMMAND ""
