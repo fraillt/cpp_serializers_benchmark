@@ -83,6 +83,8 @@ std::string getLibraryName(SerializationLibrary name) {
             return "handwritten";
         case SerializationLibrary::IOSTREAM:
             return "iostream";
+        case SerializationLibrary::MSGPACK:
+            return "msgpack";
         case SerializationLibrary::PROTOBUF:
             return "protobuf";
         case SerializationLibrary::YAS:
