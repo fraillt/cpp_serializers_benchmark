@@ -91,6 +91,8 @@ std::string getLibraryName(SerializationLibrary name) {
             return "yas";
         case SerializationLibrary::ZPP:
             return "zpp";
+        case SerializationLibrary::ZPP_BITS:
+            return "zpp_bits";
     }
     throw "Unknown library name";
 }

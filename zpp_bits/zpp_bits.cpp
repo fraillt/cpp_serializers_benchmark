@@ -20,47 +20,34 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
+#include "testing/test.h"
 
-#ifndef CPP_SERIALIZERS_BENCHMARK_TESTING_CORE_TEST_H
-#define CPP_SERIALIZERS_BENCHMARK_TESTING_CORE_TEST_H
+#include "zpp_bits.h"
 
-#include <cstddef>
-#include <testing/types.h>
-
-struct Buf {
-    const uint8_t* ptr;
-    size_t bytesCount;
-};
-
-enum class SerializationLibrary {
-    BITSERY,
-    BOOST,
-    CEREAL,
-    FLATBUFFERS,
-    HAND_WRITTEN,
-    IOSTREAM,
-    MSGPACK,
-    PROTOBUF,
-    YAS,
-    ZPP,
-    ZPP_BITS,
-};
-
-struct TestInfo {
-    SerializationLibrary library;
-    std::string name;
-    std::string info;
-};
-
-class ISerializerTest {
+class ZppBitsArchiver : public ISerializerTest {
 public:
-    virtual Buf serialize(const std::vector<MyTypes::Monster>& data) = 0;
-    virtual void deserialize(Buf buf, std::vector<MyTypes::Monster>& res) = 0;
-    virtual TestInfo testInfo() const = 0;
-    virtual ~ISerializerTest() = default;
+    Buf serialize(const std::vector<MyTypes::Monster> &data) override {
+        (void) zpp::bits::out{m_data}(data);
+        return { m_data.data(), m_data.size() };
+    }
+
+    void deserialize(Buf buf, std::vector<MyTypes::Monster> &resVec) override {
+        (void) zpp::bits::in{std::span{buf.ptr, buf.bytesCount}}(resVec);
+    }
+
+    TestInfo testInfo() const override {
+        return {
+                SerializationLibrary::ZPP_BITS,
+                "general",
+                ""
+        };
+    }
+
+private:
+    std::vector<unsigned char> m_data;
 };
 
-int runTest(ISerializerTest& archive);
-std::string getLibraryName(SerializationLibrary);
-
-#endif //CPP_SERIALIZERS_BENCHMARK_TESTING_CORE_TEST_H
+int main() {
+    ZppBitsArchiver test;
+    return runTest(test);
+}
