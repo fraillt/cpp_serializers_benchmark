@@ -89,8 +89,6 @@ std::string getLibraryName(SerializationLibrary name) {
             return "protobuf";
         case SerializationLibrary::YAS:
             return "yas";
-        case SerializationLibrary::ZPP:
-            return "zpp";
         case SerializationLibrary::ZPP_BITS:
             return "zpp_bits";
     }
