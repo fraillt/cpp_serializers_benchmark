@@ -42,7 +42,6 @@ enum class SerializationLibrary {
     MSGPACK,
     PROTOBUF,
     YAS,
-    ZPP,
     ZPP_BITS,
 };
 
