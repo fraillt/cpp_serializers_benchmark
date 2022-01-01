@@ -7,59 +7,61 @@
 * [flatbuffers](https://google.github.io/flatbuffers/) 2.0.0
 * [yas](https://github.com/niXman/yas) 7.1.0
 * [protobuf](https://developers.google.com/protocol-buffers/) 3.17.3
-* [zpp](https://github.com/eyalz800/serializer) 0.5
+* [zpp_bits](https://github.com/eyalz800/zpp_bits) 2.0
 * [msgpack](https://github.com/msgpack/msgpack-c) 3.3.0
 
-## GCC 10.3.0 (Ubuntu 20.04 x64)
+## GCC 11 (Ubuntu 20.04 x64)
 
 | library     | test case                                                  | bin size | data size | ser time | des time |
 | ----------- | ---------------------------------------------------------- | -------- | --------- | -------- | -------- |
-| bitsery     | general                                                    | 70608B   | 6913B     | 1119ms   | 1166ms   |
-| bitsery     | brief syntax[<sup>1</sup>](#additional-tests-information)  | 70584B   | 6913B     | 1047ms   | 1067ms   |
-| bitsery     | compatibility[<sup>2</sup>](#additional-tests-information) | 70880B   | 7113B     | 1136ms   | 1039ms   |
-| bitsery     | compression[<sup>3</sup>](#additional-tests-information)   | 70552B   | 4213B     | 1607ms   | 1492ms   |
-| bitsery     | fixed buffer[<sup>4</sup>](#additional-tests-information)  | 53368B   | 6913B     | 702ms    | 1166ms   |
-| bitsery     | stream[<sup>5</sup>](#additional-tests-information)        | 59312B   | 6913B     | 1285ms   | 5777ms   |
-| bitsery     | unsafe read[<sup>6</sup>](#additional-tests-information)   | 66536B   | 6913B     | 1491ms   | 1175ms   |
-| boost       | general                                                    | 278656B  | 11037B    | 15391ms  | 12912ms  |
-| cereal      | general                                                    | 62088B   | 10413B    | 10518ms  | 10245ms  |
-| flatbuffers | general                                                    | 70728B   | 14924B    | 9075ms   | 3701ms   |
-| handwritten | general[<sup>7</sup>](#additional-tests-information)       | 47736B   | 10413B    | 1409ms   | 1509ms   |
-| handwritten | unsafe[<sup>8</sup>](#additional-tests-information)        | 47744B   | 10413B    | 1424ms   | 1165ms   |
-| iostream    | general[<sup>9</sup>](#additional-tests-information)       | 53568B   | 8413B     | 10695ms  | 13751ms  |
-| msgpack     | general                                                    | 88840B   | 8857B     | 3340ms   | 13842ms  |
-| protobuf    | general                                                    | 2086616B | 10018B    | 21229ms  | 22077ms  |
-| protobuf    | arena[<sup>10</sup>](#additional-tests-information)        | 2086624B | 10018B    | 10163ms  | 12062ms  |
-| yas         | general[<sup>11</sup>](#additional-tests-information)      | 60752B   | 10463B    | 2107ms   | 1554ms   |
-| yas         | compression[<sup>12</sup>](#additional-tests-information)  | 65072B   | 7315B     | 2677ms   | 2392ms   |
-| yas         | stream[<sup>13</sup>](#additional-tests-information)       | 55888B   | 10463B    | 10489ms  | 11289ms  |
-| zpp         | general                                                    | 57816B   | 8413B     | 1446ms   | 1588ms   |
+| bitsery     | general                                                    | 70904B   | 6913B     | 1470ms   | 1524ms   |
+| bitsery     | brief syntax[<sup>1</sup>](#additional-tests-information)  | 70888B   | 6913B     | 1416ms   | 1561ms   |
+| bitsery     | compatibility[<sup>2</sup>](#additional-tests-information) | 75192B   | 7113B     | 1490ms   | 1291ms   |
+| bitsery     | compression[<sup>3</sup>](#additional-tests-information)   | 70848B   | 4213B     | 1927ms   | 2044ms   |
+| bitsery     | fixed buffer[<sup>4</sup>](#additional-tests-information)  | 53648B   | 6913B     | 927ms    | 1466ms   |
+| bitsery     | stream[<sup>5</sup>](#additional-tests-information)        | 59568B   | 6913B     | 1611ms   | 6180ms   |
+| bitsery     | unsafe read[<sup>6</sup>](#additional-tests-information)   | 66760B   | 6913B     | 1352ms   | 982ms    |
+| boost       | general                                                    | 279024B  | 11037B    | 15126ms  | 12724ms  |
+| cereal      | general                                                    | 70560B   | 10413B    | 10777ms  | 9088ms   |
+| flatbuffers | general                                                    | 70640B   | 14924B    | 8757ms   | 3361ms   |
+| handwritten | general[<sup>7</sup>](#additional-tests-information)       | 47936B   | 10413B    | 1506ms   | 1577ms   |
+| handwritten | unsafe[<sup>8</sup>](#additional-tests-information)        | 47944B   | 10413B    | 1616ms   | 1392ms   |
+| iostream    | general[<sup>9</sup>](#additional-tests-information)       | 53872B   | 8413B     | 11956ms  | 12928ms  |
+| msgpack     | general                                                    | 89144B   | 8857B     | 2770ms   | 14033ms  |
+| protobuf    | general                                                    | 2077864B | 10018B    | 19929ms  | 20592ms  |
+| protobuf    | arena[<sup>10</sup>](#additional-tests-information)        | 2077872B | 10018B    | 10319ms  | 11787ms  |
+| yas         | general[<sup>11</sup>](#additional-tests-information)      | 61072B   | 10463B    | 2286ms   | 1770ms   |
+| yas         | compression[<sup>12</sup>](#additional-tests-information)  | 65400B   | 7315B     | 2770ms   | 2498ms   |
+| yas         | stream[<sup>13</sup>](#additional-tests-information)       | 56184B   | 10463B    | 10871ms  | 11182ms  |
+| zpp_bits    | general                                                    | 52192B   | 8413B     | 733ms    | 693ms    |
+| zpp_bits    | fixed buffer                                               | 48000B   | 8413B     | 620ms    | 667ms    |
 
-## Clang 12.0.0 (Ubuntu 20.04 x64)
 
+## Clang 12.0.1 (Ubuntu 20.04 x64)
 
 | library     | test case                                                  | bin size | data size | ser time | des time |
 | ----------- | ---------------------------------------------------------- | -------- | --------- | -------- | -------- |
-| bitsery     | general                                                    | 49616B   | 6913B     | 1516ms   | 1450ms   |
-| bitsery     | brief syntax[<sup>1</sup>](#additional-tests-information)  | 55400B   | 6913B     | 1948ms   | 1546ms   |
-| bitsery     | compatibility[<sup>2</sup>](#additional-tests-information) | 54448B   | 7113B     | 1716ms   | 1580ms   |
-| bitsery     | compression[<sup>3</sup>](#additional-tests-information)   | 54784B   | 4213B     | 3167ms   | 3222ms   |
-| bitsery     | fixed buffer[<sup>4</sup>](#additional-tests-information)  | 45248B   | 6913B     | 690ms    | 1518ms   |
-| bitsery     | stream[<sup>5</sup>](#additional-tests-information)        | 54816B   | 6913B     | 1661ms   | 4684ms   |
-| bitsery     | unsafe read[<sup>6</sup>](#additional-tests-information)   | 49784B   | 6913B     | 1639ms   | 957ms    |
-| boost       | general                                                    | 236840B  | 11037B    | 12616ms  | 10876ms  |
-| cereal      | general                                                    | 61520B   | 10413B    | 7824ms   | 6907ms   |
-| flatbuffers | general                                                    | 58544B   | 14924B    | 8429ms   | 2955ms   |
-| handwritten | general[<sup>7</sup>](#additional-tests-information)       | 43168B   | 10413B    | 1143ms   | 1004ms   |
-| handwritten | unsafe[<sup>8</sup>](#additional-tests-information)        | 43168B   | 10413B    | 1155ms   | 911ms    |
-| iostream    | general[<sup>9</sup>](#additional-tests-information)       | 48688B   | 8413B     | 8506ms   | 10731ms  |
-| msgpack     | general                                                    | 77304B   | 8857B     | 2865ms   | 12362ms  |
-| protobuf    | general                                                    | 1781640B | 10018B    | 15266ms  | 17188ms  |
-| protobuf    | arena[<sup>10</sup>](#additional-tests-information)        | 1781672B | 10018B    | 7517ms   | 9792ms   |
-| yas         | general[<sup>11</sup>](#additional-tests-information)      | 55224B   | 10463B    | 1707ms   | 1433ms   |
-| yas         | compression[<sup>12</sup>](#additional-tests-information)  | 55544B   | 7315B     | 2309ms   | 2453ms   |
-| yas         | stream[<sup>13</sup>](#additional-tests-information)       | 50632B   | 10463B    | 8333ms   | 9225ms   |
-| zpp         | general                                                    | 56024B   | 8413B     | 2284ms   | 1395ms   |
+| bitsery     | general                                                    | 53728B   | 6913B     | 2128ms   | 1832ms   |
+| bitsery     | brief syntax[<sup>1</sup>](#additional-tests-information)  | 55320B   | 6913B     | 2789ms   | 2071ms   |
+| bitsery     | compatibility[<sup>2</sup>](#additional-tests-information) | 54360B   | 7113B     | 2195ms   | 1953ms   |
+| bitsery     | compression[<sup>3</sup>](#additional-tests-information)   | 54688B   | 4213B     | 4315ms   | 4181ms   |
+| bitsery     | fixed buffer[<sup>4</sup>](#additional-tests-information)  | 49248B   | 6913B     | 946ms    | 1941ms   |
+| bitsery     | stream[<sup>5</sup>](#additional-tests-information)        | 54776B   | 6913B     | 2047ms   | 6089ms   |
+| bitsery     | unsafe read[<sup>6</sup>](#additional-tests-information)   | 49688B   | 6913B     | 2092ms   | 1162ms   |
+| boost       | general                                                    | 237008B  | 11037B    | 16011ms  | 13017ms  |
+| cereal      | general                                                    | 61480B   | 10413B    | 9977ms   | 8565ms   |
+| flatbuffers | general                                                    | 62512B   | 14924B    | 9812ms   | 3472ms   |
+| handwritten | general[<sup>7</sup>](#additional-tests-information)       | 43112B   | 10413B    | 1391ms   | 1321ms   |
+| handwritten | unsafe[<sup>8</sup>](#additional-tests-information)        | 43120B   | 10413B    | 1393ms   | 1212ms   |
+| iostream    | general[<sup>9</sup>](#additional-tests-information)       | 48632B   | 8413B     | 10992ms  | 12771ms  |
+| msgpack     | general                                                    | 77384B   | 8857B     | 3563ms   | 14705ms  |
+| protobuf    | general                                                    | 2032712B | 10018B    | 18125ms  | 20211ms  |
+| protobuf    | arena[<sup>10</sup>](#additional-tests-information)        | 2032760B | 10018B    | 9166ms   | 11378ms  |
+| yas         | general[<sup>11</sup>](#additional-tests-information)      | 51000B   | 10463B    | 2114ms   | 1558ms   |
+| yas         | compression[<sup>12</sup>](#additional-tests-information)  | 51424B   | 7315B     | 2874ms   | 2739ms   |
+| yas         | stream[<sup>13</sup>](#additional-tests-information)       | 54680B   | 10463B    | 10624ms  | 10604ms  |
+| zpp_bits    | general                                                    | 47128B   | 8413B     | 790ms    | 715ms    |
+| zpp_bits    | fixed buffer                                               | 43056B   | 8413B     | 605ms    | 694ms    |
 
 ### Additional tests information
 

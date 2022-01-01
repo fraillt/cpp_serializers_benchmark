@@ -1,0 +1,56 @@
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+jobs:
+  build:
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: GCC 11 Release
+            cxx: g++-11
+            cc: gcc-11
+            mode: Release
+            os: ubuntu-20.04
+          - name: Clang 12 Release
+            cxx: clang++-12
+            cc: clang-12
+            mode: Release
+            os: ubuntu-20.04
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Update APT
+        run: sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test && sudo apt-get update
+      - name: Install LLVM
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 12
+          rm llvm.sh
+          sudo apt-get install -y --no-install-recommends libc++-12-dev libc++abi-12-dev clang-tidy-12 libunwind-12-dev llvm-12
+      - name: Install g++
+        run: sudo apt-get install -y --no-install-recommends g++-11
+      - name: CMake
+        run: |
+          cmake \
+            -S . -B build \
+            -DCMAKE_C_COMPILER=${{ matrix.config.cc }} \
+            -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
+      - name: Build
+        run: |
+          cmake --build build
+      - name: Test Results
+        run: |
+          cd ./tools
+          npm install
+          npm start
