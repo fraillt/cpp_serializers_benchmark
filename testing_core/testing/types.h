@@ -28,6 +28,10 @@
 #include <vector>
 #include <valarray>
 
+#include <opencv2/core.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgcodecs.hpp>
+
 namespace MyTypes {
     enum Color : uint8_t {
         Red,
@@ -71,6 +75,7 @@ namespace MyTypes {
         std::vector<Weapon> weapons;
         Weapon equipped;
         std::vector<Vec3> path;
+        std::vector<uint8_t> image;
 
         bool operator==(const MyTypes::Monster &rhs) const {
             return pos == rhs.pos &&
@@ -81,7 +86,8 @@ namespace MyTypes {
                    color == rhs.color &&
                    weapons == rhs.weapons &&
                    equipped == rhs.equipped &&
-                   path == rhs.path;
+                   path == rhs.path &&
+                   image == rhs.image;
         };
 
     };

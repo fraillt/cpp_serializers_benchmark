@@ -1,0 +1,17 @@
+{
+  "name": "benchmark",
+  "version-string": "0.1.0",
+  "dependencies": [
+    {
+      "name": "opencv",
+      "version>=": "4.5.1"
+    }
+  ],
+  "builtin-baseline": "8e8a3d7c1a6f7f587b486663b1e814911e6f2342",
+  "overrides": [
+    {
+      "name": "opencv",
+      "version": "4.5.1"
+    }
+  ]
+}
