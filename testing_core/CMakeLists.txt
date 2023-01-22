@@ -2,7 +2,7 @@
 find_package(OpenCV REQUIRED)
 
 add_library(testingcore SHARED test.cpp types.cpp)
-#add_library(Testing::core ALIAS testingcore)
+add_library(Testing::core ALIAS testingcore)
 
 target_include_directories(testingcore
         PUBLIC ./

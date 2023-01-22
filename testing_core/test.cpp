@@ -48,7 +48,8 @@ int runTest(ISerializerTest& testCase) {
         std::cout << "result != data, abort." << std::endl;
         return -1;
     }
-    std::cout << "* data size  : " << buf.bytesCount << std::endl;
+    std::cout << "* data size [B]  : " << buf.bytesCount << std::endl;
+    std::cout << "* data size [MB]  : " << buf.bytesCount / 1000000.0f << std::endl;
 
     //begin serialization
     auto start = std::chrono::steady_clock::now();
@@ -56,7 +57,8 @@ int runTest(ISerializerTest& testCase) {
         testCase.serialize(data);
     auto end = std::chrono::steady_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "* serialize  : " << duration.count() / 1000 << std::endl;
+    std::cout << "* serialize  [ms]: " << duration.count() / 1000.0 << std::endl;
+    std::cout << "* serialize per sample [ms]: " << duration.count() / 1000.0 / SAMPLES_COUNT << std::endl;
 
     //deserialize on top of old object
     start = std::chrono::steady_clock::now();
@@ -65,7 +67,8 @@ int runTest(ISerializerTest& testCase) {
     }
     end = std::chrono::steady_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "* deserialize: " << duration.count() / 1000 << std::endl;
+    std::cout << "* deserialize [ms]: " << duration.count() / 1000.0  << std::endl;
+    std::cout << "* deserialize per sample [ms]: " << duration.count() / 1000.0 / SAMPLES_COUNT << std::endl;
     return 0;
 }
 

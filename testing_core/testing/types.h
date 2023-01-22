@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 #include <valarray>
+#include <iostream>
 
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
@@ -49,9 +50,9 @@ namespace MyTypes {
 //                   y == rhs.y &&
 //                   z == rhs.z;
 //    //compare with epsilon 0.05f
-    std::valarray<float> lh({x, y, z});
-    std::valarray<float> rh({rhs.x, rhs.y, rhs.z});
-    return (std::abs(lh - rh) < 0.05f).min();
+            std::valarray<float> lh({x, y, z});
+            std::valarray<float> rh({rhs.x, rhs.y, rhs.z});
+            return (std::abs(lh - rh) < 0.05f).min();
         };
     };
 
@@ -75,7 +76,26 @@ namespace MyTypes {
         std::vector<Weapon> weapons;
         Weapon equipped;
         std::vector<Vec3> path;
-        std::vector<uint8_t> image;
+//        std::vector<uint8_t> image;
+        cv::Mat image;
+
+        bool areImagesEqual(const cv::Mat &a, const cv::Mat &b) const {
+            if ((a.rows != b.rows) || (a.cols != b.cols))
+                return false;
+            cv::Scalar s = sum(a - b);
+            return (s[0] == 0) && (s[1] == 0) && (s[2] == 0);
+        }
+
+        static bool areImagesEqual(const std::vector<uint8_t> &a, const std::vector<uint8_t> &b) {
+            cv::Mat imgA = cv::imdecode(a, cv::IMREAD_UNCHANGED);
+            cv::Mat imgB = cv::imdecode(b, cv::IMREAD_UNCHANGED);
+
+            if ((imgA.rows != imgB.rows) || (imgA.cols != imgB.cols))
+                return false;
+            cv::Scalar s = sum(imgA - imgB);
+            return (s[0] == 0) && (s[1] == 0) && (s[2] == 0);
+        }
+
 
         bool operator==(const MyTypes::Monster &rhs) const {
             return pos == rhs.pos &&
@@ -87,7 +107,7 @@ namespace MyTypes {
                    weapons == rhs.weapons &&
                    equipped == rhs.equipped &&
                    path == rhs.path &&
-                   image == rhs.image;
+                   areImagesEqual(image, rhs.image);
         };
 
     };

@@ -64,6 +64,18 @@ struct pack<MyTypes::Weapon> {
         return msgpack;
     }
 };
+
+template<>
+struct pack<cv::Mat> {
+    template <typename Stream>
+    packer<Stream>& operator()(msgpack::packer<Stream>& msgpack, cv::Mat const& var) const {
+        std::vector<uint8_t> buffer;
+        cv::imencode(".png", var, buffer);
+        msgpack.pack(buffer);
+        return msgpack;
+    }
+};
+
 template<>
 struct convert<MyTypes::Weapon> {
     msgpack::object const& operator()(msgpack::object const& o, MyTypes::Weapon& v) const {
@@ -81,7 +93,7 @@ template<>
 struct pack<MyTypes::Monster> {
     template <typename Stream>
     packer<Stream>& operator()(msgpack::packer<Stream>& msgpack, MyTypes::Monster const& var) const {
-        msgpack.pack_array(9);
+        msgpack.pack_array(10);
         msgpack.pack(var.pos);
         msgpack.pack(var.mana);
         msgpack.pack(var.hp);
@@ -91,6 +103,7 @@ struct pack<MyTypes::Monster> {
         msgpack.pack(var.weapons);
         msgpack.pack(var.equipped);
         msgpack.pack(var.path);
+        msgpack.pack(var.image);
         return msgpack;
     }
 };
@@ -98,7 +111,13 @@ template<>
 struct convert<MyTypes::Monster> {
     msgpack::object const& operator()(msgpack::object const& o, MyTypes::Monster& v) const {
         if (o.type != msgpack::type::ARRAY) throw msgpack::type_error();
-        if (o.via.array.size != 9) throw msgpack::type_error();
+        if (o.via.array.size != 10) throw msgpack::type_error();
+
+        cv::Mat decodedImage = cv::imdecode(
+                o.via.array.ptr[9].as<std::vector<uint8_t>>(),
+                cv::IMREAD_UNCHANGED
+                );
+
         v = MyTypes::Monster{
             o.via.array.ptr[0].as<MyTypes::Vec3>(),
             o.via.array.ptr[1].as<int16_t>(),
@@ -108,7 +127,8 @@ struct convert<MyTypes::Monster> {
             o.via.array.ptr[5].as<MyTypes::Color>(),
             o.via.array.ptr[6].as<std::vector<MyTypes::Weapon>>(),
             o.via.array.ptr[7].as<MyTypes::Weapon>(),
-            o.via.array.ptr[8].as<std::vector<MyTypes::Vec3>>()
+            o.via.array.ptr[8].as<std::vector<MyTypes::Vec3>>(),
+            std::move(decodedImage)
         };
         return o;
     }
