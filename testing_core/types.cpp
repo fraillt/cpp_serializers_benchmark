@@ -51,16 +51,6 @@ namespace MyTypes {
         return res;
     }
 
-//    std::vector<uint8_t> createRandomColorImage() {
-//        cv::Mat img = cv::Mat::zeros(cv::Size(1,1), CV_8UC3);
-//        cv::randu(img, 0, 255);
-//
-//        std::vector<uint8_t> buffer;
-//        cv::imencode(".png", img, buffer);
-//
-//        return buffer;
-//    }
-
     cv::Mat createRandomColorImage() {
         cv::Mat img = cv::Mat::zeros(cv::Size(1920, 1080), CV_8UC3);
         cv::randu(img, 0, 255);
