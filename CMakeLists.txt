@@ -15,8 +15,8 @@ include(ExternalProject)
 
 #default definitions
 add_definitions(-DNDEBUG)
-add_definitions(-DMONSTERS=1)
-add_definitions(-DSAMPLES=10)
+add_definitions(-DMONSTERS=5)
+add_definitions(-DSAMPLES=50)
 
 # compiler
 set(CMAKE_CXX_STANDARD 20)

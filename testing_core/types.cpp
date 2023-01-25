@@ -52,7 +52,7 @@ namespace MyTypes {
     }
 
     cv::Mat createRandomColorImage() {
-        cv::Mat img = cv::Mat::zeros(cv::Size(1920, 1080), CV_8UC3);
+        cv::Mat img = cv::Mat::zeros(cv::Size(3840, 2160), CV_8UC3);
         cv::randu(img, 0, 255);
 
         return img;
