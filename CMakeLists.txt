@@ -38,12 +38,11 @@ add_subdirectory(testing_core)
 
 add_subdirectory(bitsery)
 ##add_subdirectory(boost)
-add_subdirectory(cereal) .
-g
+add_subdirectory(cereal)
 add_subdirectory(flatbuffers)
-#add_subdirectory(hand_written)
+#add_subdirectory(hand_written) # Buffer is fixed size. Wont work for big payload with image
 add_subdirectory(iostream)
 add_subdirectory(msgpack)
 ##add_subdirectory(protobuf)
 add_subdirectory(yas)
-#add_subdirectory(zpp_bits)
+add_subdirectory(zpp_bits)
