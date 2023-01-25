@@ -58,6 +58,13 @@ namespace MyTypes {
         return img;
     }
 
+    std::vector<uint8_t> createRandomColorImageBuffer(){
+        const cv::Mat img = createRandomColorImage();
+        std::vector<uint8_t> buffer;
+        cv::imencode(".png", img, buffer);
+        return buffer;
+    }
+
     Monster createRandomMonster(engine &e) {
         Monster res{};
         std::generate_n(std::back_inserter(res.name), rand_len(e), std::bind(rand_char, std::ref(e)));
@@ -75,7 +82,7 @@ namespace MyTypes {
         });
         res.equipped = createRandomWeapon(e);
         std::generate_n(std::back_inserter(res.weapons), rand_len(e), std::bind(createRandomWeapon, std::ref(e)));
-        res.image = createRandomColorImage();
+        res.image = createRandomColorImageBuffer();
         return res;
     }
 

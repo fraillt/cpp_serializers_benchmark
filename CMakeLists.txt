@@ -36,7 +36,7 @@ add_subdirectory(testing_core)
 # configure executables
 #################################################
 
-#add_subdirectory(bitsery)
+add_subdirectory(bitsery)
 ##add_subdirectory(boost)
 #add_subdirectory(cereal)
 #add_subdirectory(flatbuffers)

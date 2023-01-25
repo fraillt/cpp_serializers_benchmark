@@ -76,6 +76,7 @@ struct pack<cv::Mat> {
     }
 };
 
+
 template<>
 struct convert<MyTypes::Weapon> {
     msgpack::object const& operator()(msgpack::object const& o, MyTypes::Weapon& v) const {
@@ -113,11 +114,6 @@ struct convert<MyTypes::Monster> {
         if (o.type != msgpack::type::ARRAY) throw msgpack::type_error();
         if (o.via.array.size != 10) throw msgpack::type_error();
 
-        cv::Mat decodedImage = cv::imdecode(
-                o.via.array.ptr[9].as<std::vector<uint8_t>>(),
-                cv::IMREAD_UNCHANGED
-                );
-
         v = MyTypes::Monster{
             o.via.array.ptr[0].as<MyTypes::Vec3>(),
             o.via.array.ptr[1].as<int16_t>(),
@@ -128,7 +124,7 @@ struct convert<MyTypes::Monster> {
             o.via.array.ptr[6].as<std::vector<MyTypes::Weapon>>(),
             o.via.array.ptr[7].as<MyTypes::Weapon>(),
             o.via.array.ptr[8].as<std::vector<MyTypes::Vec3>>(),
-            std::move(decodedImage)
+            o.via.array.ptr[9].as<std::vector<uint8_t>>()
         };
         return o;
     }

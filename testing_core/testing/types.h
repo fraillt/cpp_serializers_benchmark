@@ -76,8 +76,8 @@ namespace MyTypes {
         std::vector<Weapon> weapons;
         Weapon equipped;
         std::vector<Vec3> path;
-//        std::vector<uint8_t> image;
-        cv::Mat image;
+        std::vector<uint8_t> image;
+//        cv::Mat image;
 
         bool areImagesEqual(const cv::Mat &a, const cv::Mat &b) const {
             if ((a.rows != b.rows) || (a.cols != b.cols))
