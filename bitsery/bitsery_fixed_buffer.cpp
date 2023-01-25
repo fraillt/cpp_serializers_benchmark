@@ -52,11 +52,12 @@ namespace bitsery {
         s.container(o.weapons, 10);
         s.container1b(o.inventory, 10);
         s.text1b(o.name, 10);
+        s.container1b(o.image, 50000000);
     }
 
 }
 
-using Buffer = uint8_t[150000];
+using Buffer = uint8_t[20000000];
 using InputAdapter = bitsery::InputBufferAdapter<const uint8_t *>;
 using OutputAdapter = bitsery::OutputBufferAdapter<Buffer>;
 
@@ -65,7 +66,7 @@ public:
 
     Buf serialize(const std::vector<MyTypes::Monster> &data) override {
         bitsery::Serializer<OutputAdapter> ser(_buf);
-        ser.container(data, 100000000);
+        ser.container(data, 50000000);
         ser.adapter().flush();
         return Buf{std::addressof(*std::begin(_buf)), ser.adapter().writtenBytesCount()};
 
@@ -73,14 +74,14 @@ public:
 
     void deserialize(Buf buf, std::vector<MyTypes::Monster> &res) override {
         bitsery::Deserializer<InputAdapter> des(buf.ptr, buf.bytesCount);
-        des.container(res, 100000000);
+        des.container(res, 60000000);
     }
 
     TestInfo testInfo() const override {
         return {
                 SerializationLibrary::BITSERY,
                 "fixed buffer",
-                "use non-resizable buffer uint8_t[150000] for serialization"
+                "use non-resizable buffer uint8_t[100000000] for serialization"
         };
     }
 

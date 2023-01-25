@@ -39,7 +39,7 @@ namespace cereal {
 
     template<typename Archive>
     void serialize(Archive &archive, MyTypes::Monster &o) {
-        archive(o.name, o.equipped, o.weapons, o.pos, o.path, o.mana, o.inventory, o.hp, o.color);
+        archive(o.name, o.equipped, o.weapons, o.pos, o.path, o.mana, o.inventory, o.hp, o.color, o.image);
     }
 
 }

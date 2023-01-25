@@ -38,7 +38,7 @@ add_subdirectory(testing_core)
 
 add_subdirectory(bitsery)
 ##add_subdirectory(boost)
-#add_subdirectory(cereal)
+add_subdirectory(cereal)
 #add_subdirectory(flatbuffers)
 #add_subdirectory(hand_written)
 #add_subdirectory(iostream)

@@ -51,7 +51,9 @@ namespace bitsery {
                   o.mana,
                   maxSize(o.inventory, 10),
                   o.hp,
-                  o.color);
+                  o.color,
+                  maxSize(o.image, 100000000)
+                  );
     }
 
 }

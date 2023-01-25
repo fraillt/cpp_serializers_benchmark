@@ -52,6 +52,7 @@ namespace bitsery {
         s.container(o.weapons, 10);
         s.container1b(o.inventory, 10);
         s.text1b(o.name, 10);
+        s.container1b(o.image, 100000000);
     }
 
 }
