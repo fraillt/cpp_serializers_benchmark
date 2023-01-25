@@ -46,7 +46,7 @@ namespace yas {
 
     template<typename Archive>
     void serialize(Archive &ar, MyTypes::Monster &o) {
-        ar & o.name & o.equipped & o.weapons & o.pos & o.path & o.mana & o.inventory & o.hp & o.color;
+        ar & o.name & o.equipped & o.weapons & o.pos & o.path & o.mana & o.inventory & o.hp & o.color & o.image;
     }
 
 }
