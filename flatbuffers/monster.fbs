@@ -24,6 +24,7 @@ table Monster {
   weapons:[Weapon];   // Vector of tables.
   equipped:Weapon;
   path:[Vec3];        // Vector of structs.
+  image:[ubyte];
 }
 
 table Weapon {

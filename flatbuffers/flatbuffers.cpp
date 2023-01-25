@@ -58,6 +58,8 @@ public:
                 pathVec.push_back(Vec3(p.x, p.y, p.z));
             auto path = _builder.CreateVectorOfStructs(pathVec);
 
+            auto image = _builder.CreateVector(m.image);
+
             // Shortcut for creating monster with all fields set:
             monstersVec.push_back(
                     CreateMonster(_builder,
@@ -69,7 +71,8 @@ public:
                                   static_cast<Color>(m.color),
                                   weapons,
                                   createWeapon(_builder, m.equipped),
-                                  path));
+                                  path,
+                                  image));
         }
         auto monsters = _builder.CreateVector(monstersVec);
         auto root = CreateMonstersList(_builder, monsters);
@@ -101,6 +104,10 @@ public:
                     return MyTypes::Weapon{w->name()->data(), w->damage()};
                 });
                 resM.path.resize(m->path()->size());
+
+                resM.image.resize(m->image()->size());
+                std::copy(m->image()->begin(), m->image()->end(), resM.image.begin());
+
                 std::transform(m->path()->begin(), m->path()->end(), resM.path.begin(), [](const auto &p) {
                     return MyTypes::Vec3{p->x(), p->y(), p->z()};
                 });
