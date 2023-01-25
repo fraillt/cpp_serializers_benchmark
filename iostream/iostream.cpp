@@ -64,6 +64,7 @@ namespace iostream_ops
     write(s, v.weapons);
     write(s, v.equipped);
     write(s, v.path);
+    write(s, v.image);
   }
   template<class T> inline void write(std::ostream &s, const std::vector<T> &v)
   {
@@ -120,6 +121,7 @@ namespace iostream_ops
     read(s, v.weapons);
     read(s, v.equipped);
     read(s, v.path);
+    read(s, v.image);
   }
   template<class T> inline void read(std::istream &s, std::vector<T> &v)
   {
